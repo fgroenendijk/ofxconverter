@@ -17,6 +17,7 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import ofxconverter.module.output.Ofx;
 import ofxconverter.util.CheckFile;
 
 /**
@@ -223,9 +224,15 @@ public class OFXConverterView extends FrameView {
             File [] files = open.getSelectedFiles();
             StringBuilder fileList = new StringBuilder();
             CheckFile checkFile = new CheckFile();
+
+            // TODO: have error icon when ioException was thrown
+            // TODO: have warning icon when the file has not been properly identified
+
             for ( File file: files ){
                 if( checkFile.isValid(file) ){
-                    fileList.append(checkFile.getFileType()).append( file.getName() ).append("");
+                    fileList.append(checkFile.getFileType()).append(" Header ? ").append(checkFile.hasHeader()).append(" ").append( file.getName() ).append("");
+                    Ofx ofxWriter = new Ofx();
+                    ofxWriter.createXmlFile( file );
 
                 }else{
                     fileList.append("INVALID").append( file.getName() ).append("");

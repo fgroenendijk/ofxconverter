@@ -20,10 +20,15 @@ public class CheckFile {
 
     private final long MAX_FILE_SIZE = 2097152L;
     private FileType fileType = FileType.CSV;
+    private boolean hasHeader = false;
 
     public FileType getFileType(){
         return fileType;
     };
+
+    public boolean hasHeader(){
+        return hasHeader;
+    }
 
     public boolean isValid( File file ){
         if( file.length() <= 0 || file.length() > MAX_FILE_SIZE ){
@@ -46,10 +51,11 @@ public class CheckFile {
                         if( checkLine( str ) ){
                             if( getFileType().isGeneral() ){
                                 // Assume the file has a header
+                                hasHeader = true;
                                 break;
                             }
                             else{
-                                
+                                return true;
                             }
                         }
                     default: str.append( (char)character );
@@ -58,11 +64,12 @@ public class CheckFile {
             }
         }
         catch( FileNotFoundException e ){
-            // report error
+            return false;
         }
         catch( IOException e ){
-            // report error
+            // report error, show error icon?
             System.out.println("Error!!!");
+            return false;
         }
         finally{
             try{
