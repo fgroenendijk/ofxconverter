@@ -23,6 +23,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import ofxconverter.structure.BankStatement;
+import ofxconverter.structure.Transaction;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -101,7 +103,7 @@ public class Ofx {
         return child;
     }
 
-    public boolean createXmlFile( File file ){
+    public boolean createXmlFile( File file, BankStatement bankStatement ){
         boolean result = false;
 
         String dateTime = "20100602210441";
@@ -160,15 +162,10 @@ public class Ofx {
             attachElement( transactionList, "DTSTART", dateStart );
             attachElement( transactionList, "DTEND", dateEnd );
 
-            Element transaction = attachElement( transactionList, "STMTTRN" );
-
-            attachElement( transaction, "TRNTYPE", "OTHER" );
-            attachElement( transaction, "DTPOSTED", "20100420" );
-            attachElement( transaction, "TRNAMT", "820.97" );
-            attachElement( transaction, "FITID", "20100420820.97" ); //dtposted+amount
-            attachElement( transaction, "NAME", "TEST BLUE BILLYWIG B.V. SUMATRALAAN 45 1217 GP HILVERSUM SALARIS APRIL 2010" );
-            attachElement( transaction, "BANKACCTTO", "122577876" );
-            attachElement( transaction, "MEMO", "TEST BLUE BILLYWIG B.V. SUMATRALAAN 45 1217 GP HILVERSUM SALARIS APRIL 2010" );
+            // For each transactionElement
+            for( Transaction transaction: bankStatement.getTransactions() ){
+                createTransaction( transactionList, transaction );
+            }
 
             File outputFile = new File( file.getAbsolutePath().replaceAll("\\.\\w+$", ".ofx") );
 
@@ -181,6 +178,22 @@ public class Ofx {
         }
 
         return result;
+    }
+
+    private boolean createTransaction( Element parent, Transaction transaction ){
+
+        Element transactionElement = attachElement( parent, "STMTTRN" );
+
+        attachElement( transactionElement, "TRNTYPE", transaction.getType() );
+        attachElement( transactionElement, "DTPOSTED", transaction.getDate() );
+        attachElement( transactionElement, "TRNAMT", transaction.getAmount() );
+        attachElement( transactionElement, "FITID", transaction.getDate() + transaction.getAmount().replace("-", "") ); //dtposted+amount
+        attachElement( transactionElement, "NAME", transaction.getName() );
+        attachElement( transactionElement, "BANKACCTTO", transaction.getAccount() );
+        attachElement( transactionElement, "MEMO", transaction.getMemo() );
+
+        // TODO: check if the statement is correct
+        return true;
     }
 
     private String printXml(){

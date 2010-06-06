@@ -18,6 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import ofxconverter.module.output.Ofx;
+import ofxconverter.structure.BankStatement;
 import ofxconverter.util.CheckFile;
 
 /**
@@ -232,7 +233,8 @@ public class OFXConverterView extends FrameView {
                 if( checkFile.isValid(file) ){
                     fileList.append(checkFile.getFileType()).append(" Header ? ").append(checkFile.hasHeader()).append(" ").append( file.getName() ).append("");
                     Ofx ofxWriter = new Ofx();
-                    ofxWriter.createXmlFile( file );
+                    BankStatement bankStatement = new BankStatement();
+                    ofxWriter.createXmlFile( file, bankStatement );
 
                 }else{
                     fileList.append("INVALID").append( file.getName() ).append("");
