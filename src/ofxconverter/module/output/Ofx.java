@@ -37,6 +37,10 @@ public class Ofx {
 
     private Document doc = null;
 
+    /**
+     * This function will create a new dom document
+     * @return the result of the creation
+     */
     private boolean createDocument(){
         try {
             DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
@@ -106,17 +110,7 @@ public class Ofx {
     public boolean createXmlFile( File file, BankStatement bankStatement ){
         boolean result = false;
 
-        String dateTime = "20100602210441";
-        String dateStart = "20100420";
-        String dateEnd = "20100601";
-        String language = "ENG";
-        String currency = "EUR";
-        String account = "657400114";
-
-        /////////////////////////////
-        //Creating an empty XML Document
-
-        //We need a Document
+        // Create a new dom document
         if( createDocument() ){
 
             ////////////////////////
@@ -131,10 +125,10 @@ public class Ofx {
 
             appendStatusElement( signOn );
 
-            attachElement( signOn, "DTSERVER", dateTime );
-            attachElement( signOn, "LANGUAGE", language );
-            attachElement( signOn, "DTPROFUP", dateTime );
-            attachElement( signOn, "DTACCTUP", dateTime );
+            attachElement( signOn, "DTSERVER", bankStatement.getDateTime() );
+            attachElement( signOn, "LANGUAGE", bankStatement.getLanguage().toString() );
+            attachElement( signOn, "DTPROFUP", bankStatement.getDateTime() );
+            attachElement( signOn, "DTACCTUP", bankStatement.getDateTime() );
 
             Element institution = attachElement( signOn, "FI" );
 
@@ -149,18 +143,18 @@ public class Ofx {
 
             Element statements = attachElement( statementMessage, "STMTRS");
 
-            attachElement( statements, "CURDEF", currency );
+            attachElement( statements, "CURDEF", bankStatement.getCurrency().toString() );
 
             Element bankAccount = attachElement( statements, "BANKACCTFROM" );
 
             attachElement( bankAccount, "BANKID", "121099999" );
-            attachElement( bankAccount, "ACCTID", account );
+            attachElement( bankAccount, "ACCTID", bankStatement.getAccount() );
             attachElement( bankAccount, "ACCTTYPE", "CHECKING" );
 
             Element transactionList = attachElement( statements, "BANKTRANLIST" );
 
-            attachElement( transactionList, "DTSTART", dateStart );
-            attachElement( transactionList, "DTEND", dateEnd );
+            attachElement( transactionList, "DTSTART", Long.toString( bankStatement.getDateStart() ) );
+            attachElement( transactionList, "DTEND", Long.toString( bankStatement.getDateEnd() ) );
 
             // For each transactionElement
             for( Transaction transaction: bankStatement.getTransactions() ){
@@ -171,10 +165,6 @@ public class Ofx {
 
             // Output the XML
             writeXmlFile( outputFile );
-
-            // Print the xml
-            System.out.println("Here's the xml:\n\n" + printXml());
-
         }
 
         return result;
@@ -185,7 +175,7 @@ public class Ofx {
         Element transactionElement = attachElement( parent, "STMTTRN" );
 
         attachElement( transactionElement, "TRNTYPE", transaction.getType() );
-        attachElement( transactionElement, "DTPOSTED", transaction.getDate() );
+        attachElement( transactionElement, "DTPOSTED", Long.toString( transaction.getDate() ) );
         attachElement( transactionElement, "TRNAMT", transaction.getAmount() );
         attachElement( transactionElement, "FITID", transaction.getDate() + transaction.getAmount().replace("-", "") ); //dtposted+amount
         attachElement( transactionElement, "NAME", transaction.getName() );
@@ -196,7 +186,7 @@ public class Ofx {
         return true;
     }
 
-    private String printXml(){
+    public String printXml(){
         StringWriter writer = new StringWriter();
         xmlOutput( writer );
         if( writer != null ){
