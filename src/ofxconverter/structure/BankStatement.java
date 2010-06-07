@@ -5,9 +5,10 @@
 
 package ofxconverter.structure;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import ofxconverter.Currency;
 import ofxconverter.Language;
 
 /**
@@ -16,8 +17,12 @@ import ofxconverter.Language;
  */
 public class BankStatement {
 
+    private final String eol = System.getProperty("line.separator");
+
     // This is the creation date of the ofx
-    private String dateTime = "20100602210441";
+    private String dateTime = "";
+
+    private StringBuilder failedStrings = new StringBuilder();
 
     // First transaction
     private long dateStart = 99999999;
@@ -26,10 +31,24 @@ public class BankStatement {
     private long dateEnd = 0;
 
     private Language language = Language.ENG;
-    private Currency currency = Currency.EUR;
-    private String account = "304635065";
+    private String currency = "";
+    private String account = "";
 
     private List<Transaction> transactions = new ArrayList<Transaction>();
+
+    public BankStatement(){
+        createDateTime();
+    }
+
+    /**
+     *  This function will set the current date of this bank statement
+     */
+    public final void createDateTime(){
+        Date today = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
+
+        this.dateTime = formatter.format(today);
+    }
 
     /**
      * @return the dateTime
@@ -48,8 +67,8 @@ public class BankStatement {
     /**
      * @return the dateStart
      */
-    public String getDateStart() {
-        return Long.toString( dateStart );
+    public long getDateStart() {
+        return dateStart;
     }
 
     /**
@@ -62,8 +81,8 @@ public class BankStatement {
     /**
      * @return the dateEnd
      */
-    public String getDateEnd() {
-        return Long.toString(dateEnd);
+    public long getDateEnd() {
+        return dateEnd;
     }
 
     /**
@@ -90,14 +109,14 @@ public class BankStatement {
     /**
      * @return the currency
      */
-    public Currency getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
     /**
      * @param currency the currency to set
      */
-    public void setCurrency(Currency currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 
@@ -142,6 +161,27 @@ public class BankStatement {
         }
 
         return transactions.add(transaction);
+    }
+
+    /**
+     * @return the failedStrings
+     */
+    public StringBuilder getFailedStrings() {
+        return failedStrings;
+    }
+
+    /**
+     * @param failedStrings the failedStrings to set
+     */
+    public void setFailedStrings( String failedString ) {
+        this.failedStrings.append( failedString ).append( account ).append(eol);
+    }
+
+    /**
+     * @param failedStrings the failedStrings to set
+     */
+    public void addFailedString( String failedString ) {
+        this.failedStrings.append( failedString ).append( account ).append(eol);
     }
 
 }
