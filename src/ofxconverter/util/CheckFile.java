@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import ofxconverter.FileType;
+import ofxconverter.module.input.Rabobank;
 
 /**
  *
@@ -95,9 +96,8 @@ public class CheckFile {
             if( str.toString().matches("^\"\\d*\".\".*\"(.\"\\d*\"){2}(.\".*\"){2}.\"\\d+,\\d+\"(.\".*\"){2}$") ){
                 this.fileType = FileType.CSV_ING;
             }
-            else if( str.toString().matches("^\"\\d*\",\".*\",\\d+,\".*\",\\d+\\.\\d+(,\".*\"){2},\\d+(,\".*\"){6}$") )
-            {
-                this.fileType = FileType.CSV_RABOBANK;
+            else if( str.toString().matches( Rabobank.getMatch() ) ) {
+                this.fileType = Rabobank.getType();
             }
             return true;
         }
