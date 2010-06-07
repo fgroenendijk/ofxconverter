@@ -17,6 +17,8 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import ofxconverter.module.input.Bank;
+import ofxconverter.module.input.Rabobank;
 import ofxconverter.module.output.Ofx;
 import ofxconverter.structure.BankStatement;
 import ofxconverter.util.CheckFile;
@@ -220,6 +222,8 @@ public class OFXConverterView extends FrameView {
         JFileChooser open = new JFileChooser();
         open.setMultiSelectionEnabled(true);
         open.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        open.setCurrentDirectory(null);
+
         int result = open.showOpenDialog(null);
         if( result == JFileChooser.APPROVE_OPTION ){
             File [] files = open.getSelectedFiles();
@@ -228,12 +232,21 @@ public class OFXConverterView extends FrameView {
 
             // TODO: have error icon when ioException was thrown
             // TODO: have warning icon when the file has not been properly identified
+            // TODO: move this bank selection code to another class
 
             for ( File file: files ){
                 if( checkFile.isValid(file) ){
                     fileList.append(checkFile.getFileType()).append(" Header ? ").append(checkFile.hasHeader()).append(" ").append( file.getName() ).append("");
+
+                    Bank bank = null;
+
+                    switch( checkFile.getFileType() ){
+                        case CSV_RABOBANK: bank = new Rabobank();
+                    }
+
+                    BankStatement bankStatement = bank.readFile( file );
+
                     Ofx ofxWriter = new Ofx();
-                    BankStatement bankStatement = new BankStatement();
                     ofxWriter.createXmlFile( file, bankStatement );
 
                 }else{
