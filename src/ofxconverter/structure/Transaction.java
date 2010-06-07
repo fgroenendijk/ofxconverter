@@ -11,7 +11,8 @@ package ofxconverter.structure;
  */
 public class Transaction {
 
-    private String date = "20100420";
+    private long date = 0;
+    private long interestDate = 0;
     private String amount = "820.97";
     private String name = "TEST Transaction name";
     private String account = "122577876";
@@ -21,7 +22,7 @@ public class Transaction {
     /**
      * @return the date
      */
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
@@ -29,7 +30,7 @@ public class Transaction {
      * @param date the date to set
      */
     public void setDate(String date) {
-        this.date = date;
+        this.date = new Long(date);
     }
 
     /**
@@ -100,5 +101,19 @@ public class Transaction {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * @return the interestDate
+     */
+    public long getInterestDate() {
+        return interestDate;
+    }
+
+    /**
+     * @param interestDate the interestDate to set
+     */
+    public void setInterestDate(String interestDate) {
+        this.interestDate = new Long(interestDate);
     }
 }
