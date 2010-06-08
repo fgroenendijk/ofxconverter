@@ -19,6 +19,14 @@ import ofxconverter.structure.BankStatement;
  */
 public abstract class Bank {
 
+    public Bank getBank( FileType fileType ){
+        switch( fileType ){
+            case CSV_RABOBANK: return new Rabobank();
+            case CSV_ING: return new IngPostbank();
+        }
+        return null;
+    }
+
     public static String getMatch(){
         throw new UnsupportedOperationException("Bank must implement getMatch() function");
     }
@@ -89,4 +97,38 @@ public abstract class Bank {
         return false;
     }
 
+   protected String transactionType( String type, boolean isDebet ){
+        String returnType = "OTHER";
+
+        if( type.equalsIgnoreCase( "MA" ) ){ // Machtiging
+            returnType = "DIRECTDEBIT";
+        }else if( type.equalsIgnoreCase( "TB") ){ // Telebankieren
+            returnType = "PAYMENT";
+        }else if( type.equalsIgnoreCase( "BA") ){ // Betaalautomaat
+            returnType = "POS";
+        }else if( type.equalsIgnoreCase( "GA") ){ // Geldautomaat (pin)
+            returnType = "ATM";
+        }else if( type.equalsIgnoreCase( "OV") ){ // Overschrijving
+            if(isDebet)
+            {
+                returnType = "DEBIT";
+            }else{
+                returnType = "CREDIT";
+            }
+        }else if( type.equalsIgnoreCase( "BY") ){ // Bijschrijving
+            if(isDebet){
+                returnType = "DEBIT";
+            }else{
+                returnType = "CREDIT";
+            }
+        } else if( type.equalsIgnoreCase( "DA") ){ // Diversen
+            if(isDebet){
+                returnType = "DEBIT";
+            } else {
+                returnType = "CREDIT";
+            }
+        }
+
+        return returnType;
+    }
 }

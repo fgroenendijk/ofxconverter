@@ -38,11 +38,9 @@ public class Rabobank extends Bank {
         String strText = "\"(.*)\"";
         String character = "\"(\\w)\"";
         String digits = "(\\d+)";
-        String amount = "(\\d+\\.\\d+)";
+        String amount = "(\\d*[,\\.]?\\d+\\[,\\.]\\d+)";
         String strChar = "\"(\\w*)\"";
         String comma = ",";
-
-        //"0304635065","EUR",20100512,"D",30.88,"0000000000","V. HEERDT MOTORSERV. HIL",20100512,"ba","","Pinautomaat 16:02 pasnr. 005","","","","",""
 
         Pattern p = Pattern.compile( strChars + comma +
                                      strChars + comma +
@@ -134,49 +132,11 @@ public class Rabobank extends Bank {
                 }
             }
 
-            // Remove all double spaces from the memo field
-            transaction.setMemo( transaction.getMemo().replaceAll( "\\s{2,}", " " ).trim() );
-
             bankStatement.addTransaction(transaction);
 
         }
         else{
             bankStatement.addFailedString(line);
         }
-    }
-
-    private String transactionType( String type, boolean isDebet ){
-        String returnType = "OTHER";
-
-        if( type.equalsIgnoreCase( "MA" ) ){ // Machtiging
-            returnType = "DIRECTDEBIT";
-        }else if( type.equalsIgnoreCase( "TB") ){ // Telebankieren
-            returnType = "PAYMENT";
-        }else if( type.equalsIgnoreCase( "BA") ){ // Betaalautomaat
-            returnType = "POS";
-        }else if( type.equalsIgnoreCase( "GA") ){ // Geldautomaat (pin)
-            returnType = "ATM";
-        }else if( type.equalsIgnoreCase( "OV") ){ // Overschrijving
-            if(isDebet)
-            {
-                returnType = "DEBIT";
-            }else{
-                returnType = "CREDIT";
-            }
-        }else if( type.equalsIgnoreCase( "BY") ){ // Bijschrijving
-            if(isDebet){
-                returnType = "DEBIT";
-            }else{
-                returnType = "CREDIT";
-            }
-        } else if( type.equalsIgnoreCase( "DA") ){ // Diversen
-            if(isDebet){
-                returnType = "DEBIT";
-            } else {
-                returnType = "CREDIT";
-            }
-        }
-
-        return returnType;
     }
 }
