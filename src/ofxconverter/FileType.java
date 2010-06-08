@@ -10,19 +10,29 @@ package ofxconverter;
  * @author Floris
  */
 public enum FileType {
-    CSV(true), CSV_ING, CSV_RABOBANK;
+    CSV(true,"csv file"), CSV_ING("Ing bank csv"), CSV_RABOBANK("Rabobank csv");
 
     private boolean general = true;
+    private String friendlyName = "";
 
     public boolean isGeneral(){
         return general;
+    }
+
+    public String getName(){
+        return friendlyName;
     }
 
     FileType(){
         this.general = false;
     }
 
-    FileType( boolean general ){
+    FileType( String name ){
+        this( false, name );
+    }
+
+    FileType( boolean general, String name ){
         this.general = general;
+        this.friendlyName = name;
     }
 }
