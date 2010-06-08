@@ -44,6 +44,11 @@ public class Transaction {
      * @param amount the amount to set
      */
     public void setAmount(String amount) {
+        if( amount.matches( "-?\\d*\\.?\\d+,\\d+$" ) ){
+            amount = amount.replace(",", ":");
+            amount = amount.replace(".", ",");
+            amount = amount.replace(":", ".");
+        }
         this.amount = amount;
     }
 
@@ -86,6 +91,8 @@ public class Transaction {
      * @param memo the memo to set
      */
     public void setMemo(String memo) {
+        // Remove all double spaces from the memo field
+        memo = memo.replaceAll( "\\s{2,}", " " ).trim();
         this.memo = memo;
     }
 
