@@ -5,7 +5,6 @@
 
 package ofxconverter.module.output;
 
-import com.sun.xml.internal.stream.writers.XMLWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,10 +24,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import ofxconverter.structure.BankStatement;
 import ofxconverter.structure.Transaction;
-import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Text;
 /**
  *
  * @author Floris
