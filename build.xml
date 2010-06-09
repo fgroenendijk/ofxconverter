@@ -71,4 +71,11 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <!-- Allows us to use the IzPack Ant task -->
+    <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
+    <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
+                 output="C:/Users/Floris/Documents/OFXConverter/${dist.dir}/OFXConverter-0.1.0.jar"
+                 installerType="standard"
+                 inheritall="true"
+                 basedir="C:/Users/Floris/Documents/OFXConverter" />
 </project>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<shortcuts>
+    <skipIfNotSupported/>
+    <programGroup defaultName="Ofx converter" location="applications"/>
+    <shortcut applications="no" desktop="no" iconFile="$INSTALL_PATH/"
+        iconIndex="0" initialState="noShow" name="Ofx converter"
+        programGroup="no" startMenu="yes" startup="no" target="$INSTALL_PATH/"/>
+</shortcuts>

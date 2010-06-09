@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<installation version="1.0">
+    <info>
+        <appname>Ofx converter</appname>
+        <appversion>0.1.0</appversion>
+        <authors>
+            <author email="weirdall@gmail.com" name="Floris Groenendijk"/>
+        </authors>
+        <url>http://ofxconverter.sourceforge.net</url>
+        <uninstaller name="Uninstaller.jar" write="yes"/>
+        <requiresjdk>no</requiresjdk>
+        <writeinstallationinformation>no</writeinstallationinformation>
+        <pack200/>
+        <run-privileged condition="izpack.windowsinstall.vista|izpack.windowsinstall.7"/>
+    </info>
+    <guiprefs height="480" resizable="no" width="640">
+        <modifier key="useFlags" value="yes"/>
+        <modifier key="langDisplayType" value="default"/>
+    </guiprefs>
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+    <resources>
+        <res id="shortcutSpec.xml" src="installer/installer_shortcutSpec.xml"/>
+        <res id="Unix_shortcutSpec.xml" src="installer/installer_Unix_shortcutSpec.xml"/>
+        <res id="Installer.image" src="installer/images/installer.jpg"/>
+    </resources>
+    <panels>
+        <panel classname="CheckedHelloPanel"/>
+        <panel classname="PacksPanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="ShortcutPanel"/>
+        <panel classname="FinishPanel"/>
+    </panels>
+    <packs>
+        <pack name="Ofx converter" preselected="yes" required="yes">
+            <description>This is the ofx converter application</description>
+            <file override="update"
+                src="C:\Users\Floris\Documents\OFXConverter\dist\OFXConverter.jar" targetdir="$INSTALL_PATH/"/>
+        </pack>
+    </packs>
+    <native name="ShellLink.dll" type="izpack"/>
+    <native name="ShellLink_x64.dll" type="izpack"/>
+</installation>
