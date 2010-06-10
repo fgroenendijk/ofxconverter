@@ -23,21 +23,27 @@
     <resources>
         <res id="shortcutSpec.xml" src="installer/installer_shortcutSpec.xml"/>
         <res id="Unix_shortcutSpec.xml" src="installer/installer_Unix_shortcutSpec.xml"/>
-        <res id="Installer.image" src="installer/images/installer.jpg"/>
+        <res id="Installer.image" src="C:\Users\Floris\Documents\OFXConverter\installer\images\installer.jpg"/>
     </resources>
     <panels>
         <panel classname="CheckedHelloPanel"/>
-        <panel classname="PacksPanel"/>
         <panel classname="TargetPanel"/>
-        <panel classname="InstallPanel"/>
         <panel classname="ShortcutPanel"/>
+        <panel classname="InstallPanel"/>
         <panel classname="FinishPanel"/>
     </panels>
     <packs>
         <pack name="Ofx converter" preselected="yes" required="yes">
-            <description>This is the ofx converter application</description>
+            <description/>
             <file override="update"
                 src="C:\Users\Floris\Documents\OFXConverter\dist\OFXConverter.jar" targetdir="$INSTALL_PATH/"/>
+            <file override="update"
+                src="C:\Users\Floris\Documents\OFXConverter\dist\lib\appframework-1.0.3.jar" targetdir="$INSTALL_PATH/lib"/>
+            <file override="update"
+                src="C:\Users\Floris\Documents\OFXConverter\dist\lib\swing-worker-1.1.jar" targetdir="$INSTALL_PATH/lib"/>
+            <executable class="ofxconverter.OFXConverterApp"
+                failure="abort" keep="true" stage="never"
+                targetfile="$INSTALL_PATH/OFXConverter.jar" type="jar"/>
         </pack>
     </packs>
     <native name="ShellLink.dll" type="izpack"/>

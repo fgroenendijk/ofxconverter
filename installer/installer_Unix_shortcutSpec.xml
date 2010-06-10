@@ -3,7 +3,7 @@
     <skipIfNotSupported/>
     <programGroup defaultName="Ofx converter" location="applications"/>
     <shortcut KdeUsername="root" applications="no" desktop="no"
-        encoding="UTF-8" iconFile="$INSTALL_PATH/" iconIndex="0"
-        initialState="normal" name="Ofx converter" programGroup="no"
-        startMenu="yes" startup="no" target="$INSTALL_PATH/" type="Application"/>
+        encoding="UTF-8" initialState="normal" name="Ofx converter"
+        programGroup="no" startMenu="yes" startup="no"
+        target="$INSTALL_PATH/OFXConverter.jar" type="Application"/>
 </shortcuts>
