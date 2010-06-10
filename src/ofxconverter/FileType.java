@@ -35,4 +35,10 @@ public enum FileType {
         this.general = general;
         this.friendlyName = name;
     }
+
+    @Override
+    public String toString(){
+        return this.friendlyName;
+    }
+
 }
