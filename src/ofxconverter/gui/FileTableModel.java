@@ -5,7 +5,10 @@
 
 package ofxconverter.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import ofxconverter.FileHandler;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.ResourceManager;
 import org.jdesktop.application.ResourceMap;
@@ -16,44 +19,56 @@ import org.jdesktop.application.ResourceMap;
  */
 public class FileTableModel extends DefaultTableModel{
 
-    private static ResourceMap resourceMap = null;
-    private DefaultTableModel tableModel = null;
+    private ResourceMap resourceMap = null;
+    private List<FileHandler> fileHandlers = new ArrayList<FileHandler>();
 
     private Class[] types = new Class [] {
         java.lang.Boolean.class, java.lang.String.class, java.lang.String.class
     };
-    
-    public FileTableModel( ApplicationContext context, String[] names ){
-        ResourceManager manager = context.getResourceManager();
-        resourceMap = manager.getResourceMap();
 
-        for( String name: names ){
-            this.addColumn( name );
+    @Override
+    public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+    }
+
+    @Override
+    public Object getValueAt(int row, int column) {
+        if( column == 2 ){
+            return fileHandlers.get(row);
         }
-
+        else{
+            return super.getValueAt(row, column);
+        }
     }
 
-    private void createModel(){
-        tableModel = new DefaultTableModel(
-            new Object [][] {
-                {null, null, null}
-            },
-            new String [] {
-                "Process", "Title 2", "Title 3"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.String.class, java.lang.String.class
-            };
-
-            @Override
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        };
-
+    @Override
+    public void setValueAt(Object aValue, int row, int column) {
+        if( column == 2 && aValue instanceof FileHandler ){
+            FileHandler fileHandler = (FileHandler) aValue;
+            fileHandlers.add( (FileHandler) aValue );
+            aValue = fileHandler.getType().toString();
+        }
+        super.setValueAt(aValue, row, column);
     }
 
+    @Override
+    public void addRow(Object[] rowData) {
+        FileHandler fileHandler = null;
+        if( rowData.length > 2 && rowData[2] instanceof FileHandler ){
+            fileHandler = (FileHandler) rowData[2];
+            rowData[2] = fileHandler.getType().toString();            
+        }
+        else{
+            fileHandler = new FileHandler();
+        }
+        fileHandlers.add( fileHandler );
+        super.addRow(rowData);
+    }
+
+    public FileTableModel( ResourceMap resourceMap ){
+        super( new Object [] { "Process", "File", "Bank" }, 0 );
+        this.resourceMap = resourceMap;
+    }
 
     /*fileTable.setName("fileTable"); // NOI18N
 

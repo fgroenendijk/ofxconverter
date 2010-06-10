@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import ofxconverter.gui.FileTableModel;
 import ofxconverter.gui.renderer.ComboBoxCellEditor;
 import ofxconverter.gui.renderer.ComboBoxCellRenderer;
 import ofxconverter.module.input.Bank;
@@ -81,21 +82,7 @@ public class OFXConverterView extends FrameView {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        tableModel = new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-            },
-            new String [] {
-                "Process", "File", "Bank"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.String.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        };
+        tableModel = new FileTableModel( resourceMap );
         fileTable.setModel( tableModel );
         // These are the combobox values
 
@@ -220,9 +207,11 @@ public class OFXConverterView extends FrameView {
             for ( File file: files ){
                 if( checkFile.isValid(file) ){
 
+                    FileHandler fileHandler = new FileHandler( file, checkFile.getFileType(), checkFile.hasHeader() );
+
                     fileList.append(checkFile.getFileType()).append(" Header ? ").append(checkFile.hasHeader()).append(" ").append( file.getName() ).append("");
 
-                    tableModel.addRow( new Object[] { false, file.getAbsolutePath(), checkFile.getFileType() } );
+                    tableModel.addRow( new Object[] { false, file.getAbsolutePath(), fileHandler } );
 
                 }else{
                     fileList.append("INVALID").append( file.getName() ).append("");
@@ -268,7 +257,7 @@ public class OFXConverterView extends FrameView {
     private javax.swing.JButton processButton;
     // End of variables declaration//GEN-END:variables
 
-    private DefaultTableModel tableModel = null;
+    private FileTableModel tableModel = null;
 
     private JDialog aboutBox;
 }
