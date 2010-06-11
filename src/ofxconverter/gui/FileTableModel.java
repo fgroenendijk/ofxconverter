@@ -26,19 +26,27 @@ public class FileTableModel extends DefaultTableModel{
         java.lang.Boolean.class, java.lang.String.class, java.lang.String.class
     };
 
+    public FileTableModel( ResourceMap resourceMap ){
+        super( new Object [] { "Process", "File", "Bank" }, 0 );
+        this.resourceMap = resourceMap;
+    }
+
+    @Override
+    public void removeRow(int row) {
+        fileHandlers.remove(row);
+        super.removeRow(row);
+    }
+
     @Override
     public Class getColumnClass(int columnIndex) {
         return types [columnIndex];
     }
 
-    @Override
-    public Object getValueAt(int row, int column) {
-        if( column == 2 ){
+    public Object getObjectAt( int row ){
+        if( row < fileHandlers.size() ){
             return fileHandlers.get(row);
         }
-        else{
-            return super.getValueAt(row, column);
-        }
+        return null;
     }
 
     @Override
@@ -63,11 +71,6 @@ public class FileTableModel extends DefaultTableModel{
         }
         fileHandlers.add( fileHandler );
         super.addRow(rowData);
-    }
-
-    public FileTableModel( ResourceMap resourceMap ){
-        super( new Object [] { "Process", "File", "Bank" }, 0 );
-        this.resourceMap = resourceMap;
     }
 
     /*fileTable.setName("fileTable"); // NOI18N
