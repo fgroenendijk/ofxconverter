@@ -10,10 +10,10 @@ import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import ofxconverter.gui.FileTableModel;
 import ofxconverter.gui.renderer.ComboBoxCellEditor;
@@ -31,10 +31,17 @@ import ofxconverter.util.CheckFile;
 public class OFXConverterView extends FrameView {
 
     private ResourceMap resourceMap = getResourceMap();
+    ImageIcon icon = null;
 
     public OFXConverterView(SingleFrameApplication app) {
 
         super(app);
+
+        java.net.URL imageURL = OFXConverterView.class.getResource("resources/icon.png");
+        if (imageURL != null) {
+            icon = new ImageIcon(imageURL);
+            this.getFrame().setIconImage(icon.getImage());
+        }
 
         initComponents();
 
@@ -45,6 +52,7 @@ public class OFXConverterView extends FrameView {
         if (aboutBox == null) {
             JFrame mainFrame = OFXConverterApp.getApplication().getMainFrame();
             aboutBox = new OFXConverterAboutBox(mainFrame);
+            aboutBox.setIconImage(icon.getImage());
             aboutBox.setLocationRelativeTo(mainFrame);
         }
         OFXConverterApp.getApplication().show(aboutBox);
@@ -190,6 +198,11 @@ public class OFXConverterView extends FrameView {
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
         JFileChooser open = new JFileChooser();
+        open.setControlButtonsAreShown(true);
+        open.setDialogType(JFileChooser.OPEN_DIALOG);
+
+        open.setDoubleBuffered(true);
+
         open.setMultiSelectionEnabled(true);
         open.setFileSelectionMode(JFileChooser.FILES_ONLY);
         open.setCurrentDirectory(null);
@@ -209,8 +222,6 @@ public class OFXConverterView extends FrameView {
 
                     FileHandler fileHandler = new FileHandler( file, checkFile.getFileType(), checkFile.hasHeader() );
 
-                    fileList.append(checkFile.getFileType()).append(" Header ? ").append(checkFile.hasHeader()).append(" ").append( file.getName() ).append("");
-
                     tableModel.addRow( new Object[] { false, file.getAbsolutePath(), fileHandler } );
 
                 }else{
@@ -223,13 +234,20 @@ public class OFXConverterView extends FrameView {
 
     private void processButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processButtonMouseClicked
         for( int i = 0; i < tableModel.getRowCount(); i++ ){
-            Object object = tableModel.getValueAt( i, 2 );
-            if( object instanceof FileType ){
-                FileType fileType = (FileType) object;
+            Object object = tableModel.getValueAt(i, 0);
+            if( object instanceof Boolean ){
+                Boolean checked = (Boolean) object;
+                if( !checked ){
+                    continue;
+                }
+            }
+            object = tableModel.getObjectAt( i );
+            if( object instanceof FileHandler ){
+                FileHandler fileHandler = (FileHandler) object;
 
                 Bank bank = null;
 
-                switch( fileType ){
+                switch( fileHandler.getType() ){
                     case CSV_RABOBANK: bank = new Rabobank();
                                        break;
                     case CSV_ING: bank = new IngPostbank();
@@ -237,10 +255,10 @@ public class OFXConverterView extends FrameView {
                 }
 
                 if( bank != null ){
-                    //BankStatement bankStatement = bank.readFile( file );
+                    BankStatement bankStatement = bank.readFile( fileHandler.getFile() );
 
-                    //Ofx ofxWriter = new Ofx();
-                    //ofxWriter.createXmlFile( file, bankStatement );
+                    Ofx ofxWriter = new Ofx();
+                    ofxWriter.createXmlFile( fileHandler.getFile(), bankStatement );
                 }
 
             }
