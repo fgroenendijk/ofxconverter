@@ -38,7 +38,7 @@ public class Rabobank extends Bank {
         String strText = "\"(.*)\"";
         String character = "\"(\\w)\"";
         String digits = "(\\d+)";
-        String amount = "(\\d*[,\\.]?\\d+\\[,\\.]\\d+)";
+        String amount = "(\\d*[,\\.]?\\d+[,\\.]\\d+)";
         String strChar = "\"(\\w*)\"";
         String comma = ",";
 

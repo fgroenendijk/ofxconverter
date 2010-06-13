@@ -7,6 +7,7 @@ package ofxconverter.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +23,7 @@ public class FileTableModel extends DefaultTableModel implements TableModelListe
 
     private List<FileHandler> fileHandlers = new ArrayList<FileHandler>();
     private List<List<Boolean>> selectable = new ArrayList<List<Boolean>>();
+    private JButton processButton = null;
 
     private Class[] types = new Class [] {
         java.lang.Boolean.class, java.lang.String.class, java.lang.String.class
@@ -36,8 +38,19 @@ public class FileTableModel extends DefaultTableModel implements TableModelListe
         this.addTableModelListener(this);
     }
 
+    public void setButtonEnabled( boolean enable ){
+        if( processButton != null ){
+            processButton.setEnabled(enable);
+        }
+    }
+
+    public void setButton( JButton button ){
+        processButton = button;
+    }
+
     @Override
     public void removeRow(int row) {
+        setButtonEnabled( checkCheckboxes( this ) );
         fileHandlers.remove(row);
         selectable.remove(row);
         super.removeRow(row);
@@ -75,7 +88,12 @@ public class FileTableModel extends DefaultTableModel implements TableModelListe
             rowData[Column.COMBOBOX.ordinal()] = fileHandler.getType().toString();
         }
         else{
+            // Create empty stub file handler
             fileHandler = new FileHandler();
+        }
+
+        if( rowData[Column.CHECKBOX.ordinal()].equals(true) ){
+            setButtonEnabled(true);
         }
         
         ArrayList<Boolean> newSelectableArray = new ArrayList();
@@ -132,7 +150,29 @@ public class FileTableModel extends DefaultTableModel implements TableModelListe
 
                 }
             }
+        } else if( e.getColumn() == Column.CHECKBOX.ordinal() ){
+            if( e.getSource() instanceof FileTableModel ){
+                FileTableModel tableModel = (FileTableModel) e.getSource();
+
+                tableModel.setButtonEnabled( checkCheckboxes( tableModel ) );
+
+            }
         }
+
     }
+
+    private boolean checkCheckboxes( FileTableModel tableModel ){
+        Boolean oneCheckBoxChecked = false;
+
+        for( int i = 0; i < tableModel.getRowCount(); i++ ){
+            if( tableModel.getValueAt(i, Column.CHECKBOX.ordinal()).equals(true) ){
+                oneCheckBoxChecked = true;
+                break;
+            }
+        }
+
+        return oneCheckBoxChecked;
+    }
+
 
 }

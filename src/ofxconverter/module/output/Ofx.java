@@ -161,9 +161,8 @@ public class Ofx {
             File outputFile = new File( file.getAbsolutePath().replaceAll("\\.\\w+$", ".ofx") );
 
             // Output the XML
-            writeXmlFile( outputFile );
+            result = writeXmlFile( outputFile );
         }
-
         return result;
     }
 
