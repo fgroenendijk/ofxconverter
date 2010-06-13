@@ -71,13 +71,27 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <target name="-post-jar">
+        <delete dir="bin/*" includeemptydirs="true" quiet="false" failonerror="true"/>
+        <copy todir="bin">
+            <fileset dir="installer/Mac OSX"/>
+            <fileset file="${dist.dir}/OFXConverter-installer-?.?.?.jar"/>
+            <fileset file="${dist.dir}/OFXConverter.jar"/>
+        </copy>            
+        <copy todir="bin/OFXConverter.app/Contents/Resources/java">
+            <fileset file="${dist.dir}/OFXConverter.jar"/>
+        </copy>
+        <copy todir="bin/OFXConverter.app/Contents/Resources/java/lib">
+            <fileset dir="${dist.dir}/lib"/>
+        </copy>
+    </target>
+
     <!-- Allows us to use the IzPack Ant task -->
     <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
-    <target name="installer" description="Create jar installer">
-        <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
-                output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-0.1.0.jar"
-                installerType="standard"
-                inheritall="true"
-                basedir="C:/Users/Floris/Documents/OFXConverter" />
-    </target>
+    <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
+            output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer-0.1.0.jar"
+            installerType="standard"
+            inheritall="true"
+            basedir="C:/Users/Floris/Documents/OFXConverter" />
 </project>
