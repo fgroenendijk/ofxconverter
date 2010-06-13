@@ -16,6 +16,7 @@ public class FileHandler {
     private File file = null;
     private FileType type = null;
     private boolean hasHeader = false;
+    private boolean fileError = false;
 
     public FileHandler(){
     }
@@ -66,5 +67,19 @@ public class FileHandler {
      */
     public void setHasHeader(boolean hasHeader) {
         this.hasHeader = hasHeader;
+    }
+
+    /**
+     * @return the fileError
+     */
+    public boolean getFileError() {
+        return fileError;
+    }
+
+    /**
+     * @param fileError the fileError to set
+     */
+    public void setFileError(boolean hasFileError) {
+        this.fileError = hasFileError;
     }
 }
