@@ -22,7 +22,8 @@ public class ComboBoxCellRenderer extends JComboBox implements TableCellRenderer
             setForeground(table.getSelectionForeground());
             super.setBackground(table.getSelectionBackground());
         } else {
-            setForeground(table.getForeground()); setBackground(table.getBackground());
+            setForeground(table.getForeground());
+            setBackground(table.getBackground());
         }
 
         // Select the current value
