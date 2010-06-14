@@ -72,7 +72,13 @@
 
     -->
 
-    <target name="-post-jar">
+    <target name="installers" depends="init,clean,jar,javadoc">
+        <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
+        <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
+                output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer-0.1.0.jar"
+                installerType="standard"
+                inheritall="true"
+                basedir="C:/Users/Floris/Documents/OFXConverter" />
         <copy todir="bin">
             <fileset dir="installer/Mac OSX"/>
             <fileset file="${dist.dir}/OFXConverter-installer-?.?.?.jar"/>
@@ -89,12 +95,6 @@
         </zip>
         <delete dir="bin/OFXConverter.app" includeemptydirs="true" quiet="false" failonerror="false"/>
         <!-- Allows us to use the IzPack Ant task -->
-        <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
-        <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
-                output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer-0.1.0.jar"
-                installerType="standard"
-                inheritall="true"
-                basedir="C:/Users/Floris/Documents/OFXConverter" />
     </target>
 
 </project>
