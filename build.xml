@@ -72,7 +72,8 @@
 
     -->
 
-    <target name="installers" depends="init,clean,jar,javadoc">
+    <target name="installer" depends="init,clean,jar">
+        <!-- Created installer for windows -->
         <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
         <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
                 output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer-0.1.0.jar"
@@ -82,7 +83,6 @@
         <copy todir="bin">
             <fileset dir="installer/Mac OSX"/>
             <fileset file="${dist.dir}/OFXConverter-installer-?.?.?.jar"/>
-            <fileset file="${dist.dir}/OFXConverter.jar"/>
         </copy>            
         <copy todir="bin/OFXConverter.app/Contents/Resources/java">
             <fileset file="${dist.dir}/OFXConverter.jar"/>
@@ -90,9 +90,44 @@
         <copy todir="bin/OFXConverter.app/Contents/Resources/java/lib">
             <fileset dir="${dist.dir}/lib"/>
         </copy>
-        <zip basedir="bin" destfile="bin/OFXConverter-OSX.zip">
-            <filename name="OFXConverter.app/**" />
-        </zip>
+
+        <!-- Create tar file for OSX which includes needed libraries -->
+        <tar destfile="bin/OFXConverter-OSX.tar" basedir="bin">
+            <filename name="OFXConverter.app/Contents/Resources/**" />
+            <tarfileset dir="installer/Mac OSX/OFXConverter.app/Contents" filemode="700"
+                        prefix="/OFXConverter.app/Contents/" preserveLeadingSlashes="true">
+                  <include name="Info.plist"/>
+                  <include name="PkgInfo"/>
+            </tarfileset>
+            <tarfileset dir="installer/Mac OSX/OFXConverter.app/Contents/MacOS/" filemode="700"
+                        fullpath="/OFXConverter.app/Contents/MacOS/JavaApplicationStub" preserveLeadingSlashes="true">
+                  <filename name="JavaApplicationStub"/>
+            </tarfileset>
+            <tarfileset dir="${dist.dir}/" fullpath="/OFXConverter.app/Contents/Resources/Java" preserveLeadingSlashes="true">
+                  <filename name="OFXConverter.jar"/>
+            </tarfileset>
+            <tarfileset dir="${dist.dir}/" fullpath="/OFXConverter.app/Contents/Resources/Java/lib" preserveLeadingSlashes="true">
+                  <filename name="lib"/>
+            </tarfileset>
+        </tar>
+        <!-- Create gzipped tar file -->
+        <gzip destfile="bin/OFXConverter-OSX.tar.gz" src="bin/OFXConverter-OSX.tar"/>
+        
+        <!-- Create tar file which includes needed libraries -->
+        <tar destfile="bin/OFXConverter.tar" basedir="bin">
+            <filename name="OFXConverter.app/Contents/Resources/**" />
+            <tarfileset dir="${dist.dir}/" preserveLeadingSlashes="true">
+                  <filename name="OFXConverter.jar"/>
+            </tarfileset>
+            <tarfileset dir="${dist.dir}/" fullpath="/lib" preserveLeadingSlashes="true">
+                  <filename name="lib"/>
+            </tarfileset>
+        </tar>
+        <!-- Create gzipped tar file -->
+        <gzip destfile="bin/OFXConverter.tar.gz" src="bin/OFXConverter.tar"/>
+
+        <delete file="bin/OFXConverter-OSX.tar"/>
+        <delete file="bin/OFXConverter.tar"/>
         <delete dir="bin/OFXConverter.app" includeemptydirs="true" quiet="false" failonerror="false"/>
         <!-- Allows us to use the IzPack Ant task -->
     </target>
