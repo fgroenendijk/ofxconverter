@@ -43,6 +43,8 @@
                 src="C:\Users\Floris\Documents\OFXConverter\dist\lib\swing-worker-1.1.jar" targetdir="$INSTALL_PATH/lib"/>
             <file override="update"
                 src="C:\Users\Floris\Documents\OFXConverter\installer\images\icon.ico" targetdir="$INSTALL_PATH/"/>
+            <file override="update"
+                src="C:\Users\Floris\Documents\OFXConverter\installer\images\icon.png" targetdir="$INSTALL_PATH/"/>
             <executable class="ofxconverter.OFXConverterApp"
                 failure="abort" keep="true" stage="never"
                 targetfile="$INSTALL_PATH/OFXConverter.jar" type="jar"/>
