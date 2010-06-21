@@ -4,10 +4,9 @@
 
 package ofxconverter;
 
-import java.awt.event.ComponentEvent;
+import java.awt.Dimension;
 import java.awt.event.ComponentListener;
 import org.jdesktop.application.Action;
-import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 import java.io.File;
@@ -37,7 +36,7 @@ import ofxconverter.util.CheckFile;
 /**
  * The application's main frame.
  */
-public class OFXConverterView extends FrameView implements ComponentListener {
+public class OFXConverterView extends FrameView {
 
     private static final String EOL = System.getProperty("line.separator");
     ImageIcon icon = null;
@@ -64,6 +63,7 @@ public class OFXConverterView extends FrameView implements ComponentListener {
         if (imageURL != null) {
             icon = new ImageIcon(imageURL);
             this.getFrame().setIconImage(icon.getImage());
+            this.getFrame().setMinimumSize( new Dimension( 550, 400 ) );
         }
 
         initComponents();
@@ -373,15 +373,4 @@ public class OFXConverterView extends FrameView implements ComponentListener {
 
     private JDialog aboutBox;
 
-    public void componentResized(ComponentEvent e) {
-        if( e.getSource() instanceof OFXConverterView ){
-            e.getSource();
-        }
-    }
-
-    public void componentMoved(ComponentEvent e) {}
-
-    public void componentShown(ComponentEvent e) {}
-
-    public void componentHidden(ComponentEvent e) {}
 }
