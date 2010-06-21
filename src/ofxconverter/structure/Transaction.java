@@ -13,10 +13,10 @@ public class Transaction {
 
     private long date = 0;
     private long interestDate = 0;
-    private String amount = "820.97";
-    private String name = "TEST Transaction name";
-    private String account = "122577876";
-    private String memo = "TEST Transaction name but with memo's";
+    private String amount = "";
+    private String name = "";
+    private String account = "";
+    private String memo = "";
     private String type = "OTHER";
 
     /**

@@ -346,6 +346,12 @@ public class OFXConverterView extends FrameView {
                             tableModel.setValueAt(false, i, Column.CHECKBOX.ordinal());
                             tableModel.setValueAt("done", i, Column.CHECKBOX.ordinal());
                         }
+                        if( bankStatement.getFailedStrings().length() > 0 ){
+                            if( fileHandler.isHasHeader() ){
+                                logTextField.append( "Skipped header: " );
+                            }
+                            logTextField.append( bankStatement.getFailedStrings() + EOL );
+                        }
                     }
                 }
                 else{

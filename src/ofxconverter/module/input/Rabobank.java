@@ -47,7 +47,7 @@ public class Rabobank extends Bank {
                                      digits + comma +
                                      character + comma +
                                      amount + comma +
-                                     strChars + comma +
+                                     strChar + comma +
                                      strText + comma +
                                      digits + comma +
                                      strChars + comma +
