@@ -2,9 +2,26 @@
 <shortcuts>
     <skipIfNotSupported/>
     <programGroup defaultName="Ofx converter" location="applications"/>
-    <shortcut KdeUsername="root" applications="yes" desktop="no"
-        encoding="UTF-8" initialState="normal" name="Ofx converter"
-        programGroup="no" startMenu="no" startup="no"
-        target="$INSTALL_PATH/OFXConverter.jar" type="Application"
-        iconFile="$INSTALL_PATH/icon.ico"/>
+
+    <shortcut name="Ofx converter"
+        target="/usr/bin/java"
+        commandLine="-jar $INSTALL_PATH/OFXConverter.jar"
+        description="Launch OFX Converter"
+        iconFile="$INSTALL_PATH/icon.png"
+        iconIndex="0"
+        workingDirectory="$INSTALL_PATH"
+        initialState="normal"
+        KdeSubstUID="false"
+        programGroup="yes"
+        desktop="yes"
+        applications="no"
+        startMenu="yes"
+        startup="no"
+        type="Application"
+        terminal="true"
+        encoding="UTF-8">
+            <createForPack name="Core"/>
+        </shortcut>
+
+
 </shortcuts>
