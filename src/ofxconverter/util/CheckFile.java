@@ -54,6 +54,7 @@ public class CheckFile {
                             if( getFileType().isGeneral() ){
                                 // Assume the file has a header
                                 hasHeader = true;
+                                str.setLength(0);
                                 break;
                             }
                             else{
