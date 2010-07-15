@@ -175,7 +175,9 @@ public class Ofx {
         attachElement( transactionElement, "TRNAMT", transaction.getAmount() );
         attachElement( transactionElement, "FITID", transaction.getDate() + transaction.getAmount().replace("-", "") ); //dtposted+amount
         attachElement( transactionElement, "NAME", transaction.getName() );
-        attachElement( transactionElement, "BANKACCTTO", transaction.getAccount() );
+        if( !transaction.getAccount().isEmpty() ){
+            attachElement( transactionElement, "BANKACCTTO", transaction.getAccount() );
+        }
         attachElement( transactionElement, "MEMO", transaction.getMemo() );
 
         // TODO: check if the statement is correct
