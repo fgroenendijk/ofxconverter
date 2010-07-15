@@ -77,7 +77,7 @@
         <delete file="${dist.dir}/OFXConverter-installer-?.?.?.jar"/>
         <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
         <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
-                output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer-0.1.2.jar"
+                output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer.jar"
                 installerType="standard"
                 inheritall="true"
                 basedir="C:/Users/Floris/Documents/OFXConverter" />
