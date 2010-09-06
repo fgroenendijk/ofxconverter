@@ -76,11 +76,11 @@
         <!-- Created installer for windows -->
         <delete file="${dist.dir}/OFXConverter-installer.jar"/>
         <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
-        <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
-                output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer.jar"
+        <IzPack input="C:/Users/Floris/Documents/NetBeansProjects/OFXConverter/installer/installer.xml"
+                output="C:/Users/Floris/Documents/NetBeansProjects/OFXConverter/dist/OFXConverter-installer.jar"
                 installerType="standard"
                 inheritall="true"
-                basedir="C:/Users/Floris/Documents/OFXConverter" />
+                basedir="C:/Users/Floris/Documents/NetBeansProjects/OFXConverter" />
         <delete file="bin/OFXConverter-installer.jar"/>
         <copy todir="bin">
             <fileset dir="installer/Mac OSX"/>

@@ -13,6 +13,7 @@ import java.io.IOException;
 import ofxconverter.FileType;
 import ofxconverter.module.input.IngPostbank;
 import ofxconverter.module.input.Rabobank;
+import ofxconverter.module.input.Raiffeisen;
 
 /**
  *
@@ -93,13 +94,16 @@ public class CheckFile {
     private boolean checkLine( StringBuilder str ){
 
         // This is a match for csv file
-        if( str.toString().matches("^\".*\".(\".*\")*$") ){
+        if( str.toString().matches("^\"*.*\"*.(\"*.*\"*)*$") ){
             this.fileType = FileType.CSV;
             if( str.toString().matches( IngPostbank.getMatch() ) ){
                 this.fileType = IngPostbank.getType();
             }
             else if( str.toString().matches( Rabobank.getMatch() ) ) {
                 this.fileType = Rabobank.getType();
+            }
+            else if( str.toString().matches( Raiffeisen.getMatch() ) ) {
+                this.fileType = Raiffeisen.getType();
             }
             return true;
         }

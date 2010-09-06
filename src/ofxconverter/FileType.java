@@ -10,7 +10,7 @@ package ofxconverter;
  * @author Floris
  */
 public enum FileType {
-    CSV(true,"csv file"), CSV_ING("Ing bank csv"), CSV_RABOBANK("Rabobank csv");
+    CSV(true,"csv file"), CSV_ING("Ing bank csv"), CSV_RABOBANK("Rabobank csv"), CSV_RAIIFFEISEN("Raiiffeisen csv");
 
     private boolean general = true;
     private String friendlyName = "";

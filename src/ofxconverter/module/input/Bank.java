@@ -19,10 +19,11 @@ import ofxconverter.structure.BankStatement;
  */
 public abstract class Bank {
 
-    public Bank getBank( FileType fileType ){
+    public static Bank getBank( FileType fileType ){
         switch( fileType ){
             case CSV_RABOBANK: return new Rabobank();
             case CSV_ING: return new IngPostbank();
+            case CSV_RAIIFFEISEN: return new Raiffeisen();
         }
         return null;
     }

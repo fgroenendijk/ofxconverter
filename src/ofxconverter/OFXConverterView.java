@@ -310,7 +310,7 @@ public class OFXConverterView extends FrameView {
 
     private void processButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processButtonMouseClicked
         // TODO: move this bank selection code to another class/method
-        for( int i = 0; i < tableModel.getRowCount(); i++ ){
+         for( int i = 0; i < tableModel.getRowCount(); i++ ){
             Object object = tableModel.getValueAt(i, FileTableModel.Column.CHECKBOX.ordinal());
             if( object instanceof Boolean ){
                 Boolean checked = (Boolean) object;
@@ -329,13 +329,8 @@ public class OFXConverterView extends FrameView {
 
                     Bank bank = null;
 
-                    switch( fileHandler.getType() ){
-                        case CSV_RABOBANK: bank = new Rabobank();
-                                           break;
-                        case CSV_ING: bank = new IngPostbank();
-                                      break;
-                    }
-
+                    bank = Bank.getBank( fileHandler.getType() );
+                    
                     if( bank != null ){
                         BankStatement bankStatement = bank.readFile( fileHandler.getFile() );
 

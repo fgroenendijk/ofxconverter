@@ -2,7 +2,7 @@
 <installation version="1.0">
     <info>
         <appname>Ofx converter</appname>
-        <appversion>0.1.0</appversion>
+        <appversion>0.1.4</appversion>
         <authors>
             <author email="weirdall@gmail.com" name="Floris Groenendijk"/>
         </authors>
@@ -23,7 +23,7 @@
     <resources>
         <res id="shortcutSpec.xml" src="installer/installer_shortcutSpec.xml"/>
         <res id="Unix_shortcutSpec.xml" src="installer/installer_Unix_shortcutSpec.xml"/>
-        <res id="Installer.image" src="C:\Users\Floris\Documents\OFXConverter\installer\images\installer.jpg"/>
+        <res id="Installer.image" src="C:\Users\Floris\Documents\NetBeansProjects\OFXConverter\installer\images\installer.jpg"/>
     </resources>
     <panels>
         <panel classname="CheckedHelloPanel"/>
@@ -36,15 +36,15 @@
         <pack name="Ofx converter" preselected="yes" required="yes">
             <description/>
             <file override="update"
-                src="C:\Users\Floris\Documents\OFXConverter\dist\OFXConverter.jar" targetdir="$INSTALL_PATH/"/>
+                src="C:\Users\Floris\Documents\NetBeansProjects\OFXConverter\dist\OFXConverter.jar" targetdir="$INSTALL_PATH/"/>
             <file override="update"
-                src="C:\Users\Floris\Documents\OFXConverter\dist\lib\appframework-1.0.3.jar" targetdir="$INSTALL_PATH/lib"/>
+                src="C:\Users\Floris\Documents\NetBeansProjects\OFXConverter\dist\lib\appframework-1.0.3.jar" targetdir="$INSTALL_PATH/lib"/>
             <file override="update"
-                src="C:\Users\Floris\Documents\OFXConverter\dist\lib\swing-worker-1.1.jar" targetdir="$INSTALL_PATH/lib"/>
+                src="C:\Users\Floris\Documents\NetBeansProjects\OFXConverter\dist\lib\swing-worker-1.1.jar" targetdir="$INSTALL_PATH/lib"/>
             <file override="update"
-                src="C:\Users\Floris\Documents\OFXConverter\installer\images\icon.ico" targetdir="$INSTALL_PATH/"/>
+                src="C:\Users\Floris\Documents\NetBeansProjects\OFXConverter\installer\images\icon.ico" targetdir="$INSTALL_PATH/"/>
             <file override="update"
-                src="C:\Users\Floris\Documents\OFXConverter\installer\images\icon.png" targetdir="$INSTALL_PATH/"/>
+                src="C:\Users\Floris\Documents\NetBeansProjects\OFXConverter\installer\images\icon.png" targetdir="$INSTALL_PATH/"/>
             <executable class="ofxconverter.OFXConverterApp"
                 failure="abort" keep="true" stage="never"
                 targetfile="$INSTALL_PATH/OFXConverter.jar" type="jar"/>
