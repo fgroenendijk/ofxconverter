@@ -74,17 +74,17 @@
 
     <target name="installer" depends="init,clean,jar">
         <!-- Created installer for windows -->
-        <delete file="${dist.dir}/OFXConverter-installer-?.?.?.jar"/>
+        <delete file="${dist.dir}/OFXConverter-installer.jar"/>
         <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
         <IzPack input="C:/Users/Floris/Documents/OFXConverter/installer/installer.xml"
                 output="C:/Users/Floris/Documents/OFXConverter/dist/OFXConverter-installer.jar"
                 installerType="standard"
                 inheritall="true"
                 basedir="C:/Users/Floris/Documents/OFXConverter" />
-        <delete file="bin/OFXConverter-installer-?.?.?.jar"/>
+        <delete file="bin/OFXConverter-installer.jar"/>
         <copy todir="bin">
             <fileset dir="installer/Mac OSX"/>
-            <fileset file="${dist.dir}/OFXConverter-installer-?.?.?.jar"/>
+            <fileset file="${dist.dir}/OFXConverter-installer.jar"/>
         </copy>            
         <copy todir="bin/OFXConverter.app/Contents/Resources/java">
             <fileset file="${dist.dir}/OFXConverter.jar"/>
