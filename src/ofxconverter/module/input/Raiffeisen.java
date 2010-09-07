@@ -78,7 +78,7 @@ public class Raiffeisen extends Bank {
                     break;
 
                 case 2:
-                    transaction.setMemo( m.group(i) );
+                    transaction.setName( m.group(i) );
                     break;
 
                 case 3:
