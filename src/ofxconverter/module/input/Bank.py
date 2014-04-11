@@ -2,7 +2,7 @@ from configobj import ConfigObj
 
 class Bank:
 
-    def checkFile( fileName ):
+    def checkFile(self, fileName):
         file = open( fileName )
         for line in file:
             if ibanSearch = re.search( r'\w{2}\d{2}\w{4}\d{7}\w{0,16}', line ):
@@ -14,7 +14,7 @@ class Bank:
     def parseLine(self, line):
         print( line )
 
-    def readFile( fileName ):
+    def readFile(self, fileName):
         file = open( fileName )
         for line in file:
             parseLine( line )
