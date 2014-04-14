@@ -35,12 +35,7 @@ class Config:
         home = expanduser("~")
         configDir = join( home, '.ofxconverter' )
 
-        try:
-            makedirs( configDir )
-        except OSError as exception:
-            if exception.errno != errno.EEXIST:
-                raise            
-        
+        makedirs( configDir, exist_ok=True )        
         configFile = join( configDir, 'banks.config' )
         
         if not exists( configFile ) or isfile( configFile ):
