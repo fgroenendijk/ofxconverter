@@ -35,6 +35,7 @@ class Bank:
 
     def searchMainIban(self, fileName):
         ibans = set([])
+        mainIban = []
         file = csv.reader( open(fileName) )
         for row in file:
             line = ','.join( row )
@@ -47,9 +48,10 @@ class Bank:
                         mainIban = self.checkIban( search.group(0), ibans )
                 if len( mainIban ) == 1:
                     break;
-                        
+                
         print( 'ibans:', ibans )
         print( 'mainIban:', mainIban )
+        return mainIban
 
     def parseLine(self, line):
         print( line )
@@ -76,5 +78,14 @@ if __name__ == '__main__':
     # If mainIban contains more than one iban,
     # let the user select which one is the main iban
     # Otherwise we know the bank this csv belongs to
+
+    if len( mainIban ) > 1:
+        print( 'there\'s too many ibans' )
+    elif len( mainIban ) == 0:
+        print( 'No ibans found' )
+    else:
+        ibanType = mainIban[0][:8]
+        
+    
     
     b.readFile( 'test.csv' )
