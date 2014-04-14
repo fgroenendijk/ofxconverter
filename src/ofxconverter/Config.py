@@ -3,7 +3,9 @@ from os.path import expanduser
 from os.path import join
 from os.path import isdir
 from os.path import isfile
+from os.path import exists
 from os import makedirs
+import errno
 
 class Config:
 
@@ -17,7 +19,12 @@ class Config:
     # 7 type
 
     def writeNewConfig(self,filename):
-        config = '''NL94INGB = 1,2,3,4,5,6,7'''.splitlines()
+        config = [
+            'NL94INGB = 1,2,3,4,5,6,7',
+            'NL95INGB = 1,2,3,4,5,6,7'
+            ]            
+
+        print( config )
 
         cfg = ConfigObj( config )
         print( cfg )
@@ -32,12 +39,11 @@ class Config:
             makedirs( configDir )
         except OSError as exception:
             if exception.errno != errno.EEXIST:
-                raise
-            
+                raise            
         
         configFile = join( configDir, 'banks.config' )
         
-        if not isfile( configFile ):
+        if not exists( configFile ) or isfile( configFile ):
             print( 'Write new config file:', configFile )
             self.writeNewConfig( configFile )
             
