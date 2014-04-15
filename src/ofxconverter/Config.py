@@ -20,8 +20,10 @@ class Config:
     # 8 debet/credit
 
     def writeNewConfig(self,filename):
+        # number is column to read
+        # write space to use multiple columns for one field
         config = [
-            'NL94INGB = 1,1,7,9,2,3,5,6',
+            'NL94INGB = 1,1,7,9 2,2,3,5,6',
             'NL95INGB = 1,2,3,4,5,6,7,8'
             ]            
 
@@ -45,26 +47,28 @@ class Config:
         for cfgBank, cfgBankValue in cfg.iteritems():
             if cfgBank == bank:
                 for fieldNumber in cfgBankValue:
-                    if not 'interestDate' in self.fields:
+                    print( fieldNumber )
+                    if not 'interestDate' in (x[0] for x in self.fields):
                         self.fields.append( [ 'interestDate', fieldNumber ] )
-                    elif not 'date' in self.fields:
+                    elif not 'date' in (x[0] for x in self.fields):
                         self.fields.append( [ 'date', fieldNumber ] )
-                    elif not 'amount' in self.fields:
+                    elif not 'amount' in (x[0] for x in self.fields):
                         self.fields.append( [ 'amount', fieldNumber ] )
-                    elif not 'memo' in self.fields:
+                    elif not 'memo' in (x[0] for x in self.fields):
                         self.fields.append( [ 'memo', fieldNumber ] )
-                    elif not 'name' in self.fields:
+                    elif not 'name' in (x[0] for x in self.fields):
                         self.fields.append( [ 'name', fieldNumber ] )
-                    elif not 'account' in self.fields:
+                    elif not 'account' in (x[0] for x in self.fields):
                         self.fields.append( [ 'account', fieldNumber ] )
-                    elif not 'type' in self.fields:
+                    elif not 'type' in (x[0] for x in self.fields):
                         self.fields.append( [ 'type', fieldNumber ] )
-                    elif not 'debet/credit' in self.fields:
+                    elif not 'debet/credit' in (x[0] for x in self.fields):
                         self.fields.append( [ 'debet/credit', fieldNumber ] )
+
+        print( self.fields )
                         
     def __init__(self):
-        self.fields = []
-            
+        self.fields = []            
 
 if __name__ == '__main__':
     config = Config()
