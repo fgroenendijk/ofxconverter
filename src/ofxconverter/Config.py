@@ -38,7 +38,7 @@ class Config:
         makedirs( configDir, exist_ok=True )       
         self.configFile = join( configDir, 'banks.config' )
         
-        if not exists( self.configFile ) or isfile( self.configFile ):
+        if not exists( self.configFile ) or not isfile( self.configFile ):
             print( 'Write new config file:', self.configFile )
             self.writeNewConfig( self.configFile )
 
