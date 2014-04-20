@@ -28,6 +28,7 @@ class BankStatement:
         self.dateEnd = 0
         self.currency = ""
         self.account = ""
+        self.language = "NL"
         self.transactions = []
 
         d = datetime.today()

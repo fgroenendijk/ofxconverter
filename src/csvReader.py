@@ -35,7 +35,5 @@ class CsvReader:
             if lineCorrect:
                 bankStatement.addTransaction( transaction )
 
-        print( bankStatement.transactions )
-
     def __init__(self, fields):
         self.fields = fields

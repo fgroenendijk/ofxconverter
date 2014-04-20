@@ -1,5 +1,6 @@
 from config import Config
 from input.bank import Bank
+from output.ofx import Ofx
 from model.bankStatement import BankStatement
 from csvReader import CsvReader
 
@@ -32,6 +33,10 @@ if __name__ == '__main__':
     csvReader = CsvReader(fields)
     
     csvReader.readFile( filename, bankStatement )
+
+    ofx = Ofx()
+
+    ofx.createXmlFile( '', bankStatement )
     
     
 

@@ -1,12 +1,15 @@
 import xml.etree.ElementTree as ET
+from model.bankStatement import BankStatement
+from model.transaction import Transaction
+import sys
 
 class Ofx:
 
-    def appendElement( self, parent, tag, text ):
+    def appendElement( self, parent, tag, text = '' ):
 
         tagElement = ET.SubElement( parent, tag )
 
-        if text:
+        if text != '':
             tagElement.text = text
 
         return tagElement
@@ -15,20 +18,20 @@ class Ofx:
 
         status = ET.SubElement( parent, 'STATUS' )
 
-        appendElement( status, 'CODE', '0' )
-        appendElement( status, 'SEVERITY', 'INFO' )
+        self.appendElement( status, 'CODE', '0' )
+        self.appendElement( status, 'SEVERITY', 'INFO' )
 
     def createTransaction( self, parent, transaction ):
-        transactionElement = appendElement( parent, 'STMTTRN' )
+        transactionElement = self.appendElement( parent, 'STMTTRN' )
 
-        appendElement( transactionElement, 'TRNTYPE', transaction.type )
-        appendElement( transactionElement, 'DTPOSTED', transaction.date )
-        appendElement( transactionElement, 'TRNAMT', transaction.amount )
-        appendElement( transactionElement, 'FITID', transaction.date + transaction.amount.replace( '-', '' ) )
-        appendElement( transactionElement, 'NAME', transaction.name )
+        self.appendElement( transactionElement, 'TRNTYPE', transaction.type )
+        self.appendElement( transactionElement, 'DTPOSTED', transaction.date )
+        self.appendElement( transactionElement, 'TRNAMT', transaction.amount )
+        self.appendElement( transactionElement, 'FITID', str(transaction.date) + transaction.amount.replace( '-', '' ) )
+        self.appendElement( transactionElement, 'NAME', transaction.name )
         if transaction.account:
-            appendElement( transactionElement, 'BANKACCTTO', transaction.account )
-        appendElement( transactionElement, 'memo', transaction.memo )
+            self.appendElement( transactionElement, 'BANKACCTTO', transaction.account )
+        self.appendElement( transactionElement, 'memo', transaction.memo )
 
     def createXmlFile( self, filename, bankStatement ):
 
@@ -38,41 +41,41 @@ class Ofx:
 
         signOn = ET.SubElement( signOnMessage, 'SONRS' )
 
-        appendStatusElement( signOn )
+        self.appendStatusElement( signOn )
 
-        appendElement( signOn, 'DTSERVER', bankStatement.date )
-        appendElement( signOn, 'LANGUAGE', bankStatement.language )
-        appendElement( signOn, 'DTPROFUP', bankStatement.date )
-        appendElement( signOn, 'DTACCTUP', bankStatement.date )
+        self.appendElement( signOn, 'DTSERVER', bankStatement.dateTime )
+        self.appendElement( signOn, 'LANGUAGE', bankStatement.language )
+        self.appendElement( signOn, 'DTPROFUP', bankStatement.dateTime )
+        self.appendElement( signOn, 'DTACCTUP', bankStatement.dateTime )
 
         institution = ET.SubElement( signOn, 'FI' )
 
-        appendElement( institution, 'ORG', 'NCH' )
-        appendElement( institution, 'FID', '1001' )
+        self.appendElement( institution, 'ORG', 'NCH' )
+        self.appendElement( institution, 'FID', '1001' )
 
         bankMessage = ET.SubElement( root, 'BANKMSGSRSV1' )
-        statementMessage = appendElement( bankMessage, 'STMTTRNRS' )
+        statementMessage = self.appendElement( bankMessage, 'STMTTRNRS' )
 
-        appendElement( statementMessage, 'TRNUID', '1001' )
-        appendStatusElement( statementMessage )
+        self.appendElement( statementMessage, 'TRNUID', '1001' )
+        self.appendStatusElement( statementMessage )
 
-        statements = appendElement( statementMessage, 'STMTRS' )
+        statements = self.appendElement( statementMessage, 'STMTRS' )
 
-        appendElement( statements, 'CURDEF', bankStatement.currency )
+        self.appendElement( statements, 'CURDEF', bankStatement.currency )
 
-        bankAccount = appendElement( statements, 'BANKACCTFROM' )
+        bankAccount = self.appendElement( statements, 'BANKACCTFROM' )
 
-        appendElement( bankAccount, 'BANKID', '121099999' )
-        appendElement( bankAccount, 'ACCTID', bankStatement.account )
-        appendElement( bankAccount, 'ACCTTYPE', 'CHECKING' )
+        self.appendElement( bankAccount, 'BANKID', '121099999' )
+        self.appendElement( bankAccount, 'ACCTID', bankStatement.account )
+        self.appendElement( bankAccount, 'ACCTTYPE', 'CHECKING' )
 
-        transactionList = appendElement( statements, 'BANKTRANLIST' )
+        transactionList = self.appendElement( statements, 'BANKTRANLIST' )
 
-        appendElement( transactionList, 'DTSTART', bankStatement.dateStart )
-        appendElement( transactionList, 'DTEND', bankStatement.dateEnd )
+        self.appendElement( transactionList, 'DTSTART', bankStatement.dateStart )
+        self.appendElement( transactionList, 'DTEND', bankStatement.dateEnd )
 
-        for bankStatement.transactions as transaction:
-            createTransaction( transaction )            
+        for transaction in bankStatement.transactions:
+            self.createTransaction( transactionList, transaction )
 
         tree = ET.ElementTree( root )
         tree.write( sys.stdout ) //filename

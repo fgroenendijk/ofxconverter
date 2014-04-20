@@ -53,37 +53,37 @@ class Transaction:
         returnType = "OTHER"
 
         # Machtiging
-        if rawType.equalsIgnoreCase( "MA" ): 
+        if rawType == "MA": 
             returnType = "DIRECTDEBIT"
 
         # Telebankieren
-        elif rawType.equalsIgnoreCase( "TB"): 
+        elif rawType == "TB": 
             returnType = "PAYMENT"
 
         # Betaalautomaat
-        elif rawType.equalsIgnoreCase( "BA"): 
+        elif rawType == "BA": 
             returnType = "POS"
 
         # Geldautomaat (pin)
-        elif rawType.equalsIgnoreCase( "GA"): 
+        elif rawType == "GA": 
             returnType = "ATM"
 
         # Overschrijving
-        elif rawType.equalsIgnoreCase( "OV"): 
+        elif rawType == "OV": 
             if self.debet:
                 returnType = "DEBIT"
             else:
                 returnType = "CREDIT"
 
         # Bijschrijving
-        elif rawType.equalsIgnoreCase( "BY"): 
+        elif rawType == "BY": 
             if isDebet:
                 returnType = "DEBIT"
             else:
                 returnType = "CREDIT"
 
         # Diversen
-        elif rawType.equalsIgnoreCase( "DA"):
+        elif rawType == "DA":
             if isDebet:
                 returnType = "DEBIT"
             else:
@@ -93,7 +93,7 @@ class Transaction:
 
     @property
     def type(self):
-        return rawType( self.__type )
+        return self.rawType( self.__type )
 
     @type.setter
     def type(self, type):
