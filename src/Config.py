@@ -68,9 +68,9 @@ class Config:
         print( self.fields )
                         
     def __init__(self):
-        self.fields = []            
+        self.fields = []
+        self.checkForConfig()
 
 if __name__ == '__main__':
     config = Config()
-    config.checkForConfig()
     config.getCurrentBank( 'NL94INGB' )

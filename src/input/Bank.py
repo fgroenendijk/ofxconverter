@@ -2,6 +2,7 @@ from configobj import ConfigObj
 from os.path import expanduser
 import re
 import csv
+from transaction import BankStatement
 
 class Bank:
 
