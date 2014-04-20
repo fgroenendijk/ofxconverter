@@ -23,7 +23,7 @@ class Config:
         # number is column to read
         # write space to use multiple columns for one field
         config = [
-            'NL94INGB = 1,1,7,9 2,2,3,5,6',
+            'NL94INGB = 0,0,6,8 1,1,2,4,5',
             'NL95INGB = 1,2,3,4,5,6,7,8'
             ]            
 
@@ -44,33 +44,29 @@ class Config:
 
     def getCurrentBank(self, bank):
         cfg = ConfigObj( self.configFile )
+        fields = []
         for cfgBank, cfgBankValue in cfg.iteritems():
             if cfgBank == bank:
                 for fieldNumber in cfgBankValue:
                     print( fieldNumber )
-                    if not 'interestDate' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'interestDate', fieldNumber ] )
-                    elif not 'date' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'date', fieldNumber ] )
-                    elif not 'amount' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'amount', fieldNumber ] )
-                    elif not 'memo' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'memo', fieldNumber ] )
-                    elif not 'name' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'name', fieldNumber ] )
-                    elif not 'account' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'account', fieldNumber ] )
-                    elif not 'type' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'type', fieldNumber ] )
-                    elif not 'debet/credit' in (x[0] for x in self.fields):
-                        self.fields.append( [ 'debet/credit', fieldNumber ] )
+                    if not 'interestDate' in (x[0] for x in fields):
+                        fields.append( [ 'interestDate', fieldNumber ] )
+                    elif not 'date' in (x[0] for x in fields):
+                        fields.append( [ 'date', fieldNumber ] )
+                    elif not 'amount' in (x[0] for x in fields):
+                        fields.append( [ 'amount', fieldNumber ] )
+                    elif not 'memo' in (x[0] for x in fields):
+                        fields.append( [ 'memo', fieldNumber ] )
+                    elif not 'name' in (x[0] for x in fields):
+                        fields.append( [ 'name', fieldNumber ] )
+                    elif not 'account' in (x[0] for x in fields):
+                        fields.append( [ 'account', fieldNumber ] )
+                    elif not 'type' in (x[0] for x in fields):
+                        fields.append( [ 'type', fieldNumber ] )
+                    elif not 'debet/credit' in (x[0] for x in fields):
+                        fields.append( [ 'debet/credit', fieldNumber ] )
 
-        print( self.fields )
+        return fields
                         
     def __init__(self):
-        self.fields = []
         self.checkForConfig()
-
-if __name__ == '__main__':
-    config = Config()
-    config.getCurrentBank( 'NL94INGB' )

@@ -8,10 +8,10 @@ class Transaction:
 
     @interestDate.setter
     def interestDate(self, date):
-        if date < 0:
+        if int(date) < 0:
             self.__interestDate = 0
         else:
-            self.__interestDate = date
+            self.__interestDate = int(date)
 
     @property
     def date(self):
@@ -19,10 +19,10 @@ class Transaction:
 
     @date.setter
     def date(self, date):
-        if date < 0:
+        if int(date) < 0:
             self.__date = 0
         else:
-            self.__date = date
+            self.__date = int(date)
 
     @property
     def amount(self):
@@ -38,6 +38,9 @@ class Transaction:
         else:
             self.__amount = amount
 
+        if re.search("^-",amount):
+            self.debet = True
+
     @property
     def memo(self):
         return self.__memo
@@ -46,12 +49,7 @@ class Transaction:
     def memo(self, memo):
             self.__memo = re.sub("\s{2,}"," ",memo.rstrip())
 
-    @property
-    def rawType(self):
-        return self.__type
-
-    @rawType.setter
-    def rawType(self, rawType, isDebet):
+    def rawType(self, rawType):
         returnType = "OTHER"
 
         # Machtiging
@@ -72,7 +70,7 @@ class Transaction:
 
         # Overschrijving
         elif rawType.equalsIgnoreCase( "OV"): 
-            if isDebet:
+            if self.debet:
                 returnType = "DEBIT"
             else:
                 returnType = "CREDIT"
@@ -91,9 +89,18 @@ class Transaction:
             else:
                 returnType = "CREDIT"
 
-        self.__type = returnType 
+        return returnType
+
+    @property
+    def type(self):
+        return rawType( self.__type )
+
+    @type.setter
+    def type(self, type):
+        self.__type = type
 
     def __init__(self):
+        self.debet = False
         self.__interestDate = 0
         self.__date = 0
         self.__amount = ""

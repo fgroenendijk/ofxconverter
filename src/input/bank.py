@@ -2,7 +2,7 @@ from configobj import ConfigObj
 from os.path import expanduser
 import re
 import csv
-from transaction import BankStatement
+from model.bankStatement import BankStatement
 
 class Bank:
 
@@ -54,25 +54,11 @@ class Bank:
         print( 'mainIban:', mainIban )
         return mainIban
 
-    def parseLine(self, line):
-        print( line )
-
-    def readFile(self, fileName):
-        file = open( fileName )
-        for line in file:
-            self.parseLine( line )
-        file.close()
-
-    def __init__(self):
-        config = ConfigObj('banks.config')
-        
-        banks = []
-
 if __name__ == '__main__':
     b = Bank()
 
-    home = expanduser("~")
-    print( 'home:', home )
+    import sys
+    print(sys.path)
 
     mainIban = b.searchMainIban( 'test.csv' )
 
@@ -86,7 +72,8 @@ if __name__ == '__main__':
         print( 'No ibans found' )
     else:
         ibanType = mainIban[0][:8]
-        
+
+    bankStatement = bankStatement.BankStatement()       
     
     
     b.readFile( 'test.csv' )

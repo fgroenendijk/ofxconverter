@@ -1,5 +1,5 @@
 from datetime import datetime
-from Transaction import Transaction
+from model.transaction import Transaction
 
 class BankStatement:
 
