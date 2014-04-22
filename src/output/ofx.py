@@ -25,7 +25,7 @@ class Ofx:
         transactionElement = self.appendElement( parent, 'STMTTRN' )
 
         self.appendElement( transactionElement, 'TRNTYPE', transaction.type )
-        self.appendElement( transactionElement, 'DTPOSTED', transaction.date )
+        self.appendElement( transactionElement, 'DTPOSTED', str(transaction.date) )
         self.appendElement( transactionElement, 'TRNAMT', transaction.amount )
         self.appendElement( transactionElement, 'FITID', str(transaction.date) + transaction.amount.replace( '-', '' ) )
         self.appendElement( transactionElement, 'NAME', transaction.name )
@@ -43,10 +43,10 @@ class Ofx:
 
         self.appendStatusElement( signOn )
 
-        self.appendElement( signOn, 'DTSERVER', bankStatement.dateTime )
+        self.appendElement( signOn, 'DTSERVER', str(bankStatement.dateTime) )
         self.appendElement( signOn, 'LANGUAGE', bankStatement.language )
-        self.appendElement( signOn, 'DTPROFUP', bankStatement.dateTime )
-        self.appendElement( signOn, 'DTACCTUP', bankStatement.dateTime )
+        self.appendElement( signOn, 'DTPROFUP', str(bankStatement.dateTime) )
+        self.appendElement( signOn, 'DTACCTUP', str(bankStatement.dateTime) )
 
         institution = ET.SubElement( signOn, 'FI' )
 
@@ -71,14 +71,14 @@ class Ofx:
 
         transactionList = self.appendElement( statements, 'BANKTRANLIST' )
 
-        self.appendElement( transactionList, 'DTSTART', bankStatement.dateStart )
-        self.appendElement( transactionList, 'DTEND', bankStatement.dateEnd )
+        self.appendElement( transactionList, 'DTSTART', str(bankStatement.dateStart) )
+        self.appendElement( transactionList, 'DTEND', str(bankStatement.dateEnd) )
 
         for transaction in bankStatement.transactions:
             self.createTransaction( transactionList, transaction )
 
-        tree = ET.ElementTree( root )
-        tree.write( sys.stdout ) //filename
+        tree = ET.ElementTree( root ) 
+        tree.write( filename + '.out' )
         
 
 if __name__ == '__main__':
