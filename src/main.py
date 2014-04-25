@@ -6,6 +6,7 @@ from csvReader import CsvReader
 
 from tkinter import Tk, Frame, Menu, filedialog, constants, ttk, Text
 from tkinter import Label, Checkbutton, IntVar, Scrollbar, Canvas
+import tkinter._fix # needed for cx_freeze
 
 class OfxConverter(Frame):
   

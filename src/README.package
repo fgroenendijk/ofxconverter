@@ -1,0 +1,4 @@
+# Creating python3 mac app file
+python3 setup.py bdist_mac --iconfile ../images/icons.icns
+# Creating dmg file 
+python3 setup.py bdist_dmg
