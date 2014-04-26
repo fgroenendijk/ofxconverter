@@ -2,7 +2,7 @@ from cx_Freeze import setup, Executable
 
 import sys
 base = None
-icon = '../images/icon.icns'
+icon = None
 if sys.platform == 'win32':
     base = 'Win32GUI'
     icon = '../images/chameleon-icon.png'
