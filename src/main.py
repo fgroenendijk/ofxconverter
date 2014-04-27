@@ -4,8 +4,8 @@ from output.ofx import Ofx
 from model.bankStatement import BankStatement
 from csvReader import CsvReader
 
-from tkinter import Tk, Frame, Menu, filedialog, constants, ttk, Text
-from tkinter import Label, Checkbutton, IntVar, Scrollbar, Canvas
+from tkinter import Tk, Toplevel, Frame, Menu, filedialog, constants, ttk, Text
+from tkinter import Label, Checkbutton, IntVar, Scrollbar, Canvas, Message, PhotoImage
 import tkinter._fix # needed for cx_freeze
 
 class OfxConverter(Frame):
@@ -27,6 +27,23 @@ class OfxConverter(Frame):
             print( msg )
             self.log.insert('end', msg)
         self.log['state'] = 'disabled'
+
+    def help(self):
+        t = Toplevel()
+        t.wm_title("About")
+        t.transient()
+
+        photo = PhotoImage(file="chameleon.gif")
+        w = Label(t, image=photo)
+        w.photo = photo
+        w.pack(fill=constants.BOTH,side=constants.LEFT,expand=True)
+        
+        l = Label(t, text="OFX Converter\n\n"+
+                  "Convert files in csv format to the\nofx format " +
+                  "which is used by a lot\nof accounting programs " +
+                  "like gnucash\n\n Written in Python 3\nby Floris Groenendijk"
+                  )
+        l.pack(side=constants.TOP, fill="both", expand=False, padx=20, pady=20)
     
     def initUI(self):
       
@@ -36,9 +53,12 @@ class OfxConverter(Frame):
         self.parent.config(menu=menubar)
         
         fileMenu = Menu(menubar)
-        fileMenu.add_command(label="Open", command=self.openFile)
+        fileMenu.add_command(label="Open", command=self.openFile, accelerator="Ctrl-o")
         fileMenu.add_command(label="Exit", command=self.onExit, accelerator="Ctrl-e", underline=1 )
         menubar.add_cascade(label="File", menu=fileMenu)
+        helpMenu = Menu(menubar)
+        helpMenu.add_command(label="About", command=self.help, accelerator="Ctrl-i")
+        menubar.add_cascade(label="Info", menu=helpMenu)
 
         notebook = ttk.Notebook( self.parent )
         tabFilesMain = Frame( notebook )
@@ -154,7 +174,4 @@ if __name__ == '__main__':
 
     app = OfxConverter(root)
     root.mainloop()
-    
-    
-
-    
+        
