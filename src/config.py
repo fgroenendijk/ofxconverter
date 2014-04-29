@@ -23,8 +23,9 @@ class Config:
         # number is column to read
         # write space to use multiple columns for one field
         config = [
-            'NL94INGB = 0,0,6,8 1,1,2,4,5',
-            'NL95INGB = 1,2,3,4,5,6,7,8'
+            'HASH = ba9998bcf7',
+            'NL94INGB = 0,0,6,8 1,1,3,4,5',
+            'NL91RABO = 0,0,0,0,0,0,0,0'
             ]            
 
         cfg = ConfigObj( config )
@@ -41,6 +42,14 @@ class Config:
         if not exists( self.configFile ) or not isfile( self.configFile ):
             print( 'Write new config file:', self.configFile )
             self.writeNewConfig( self.configFile )
+        elif isfile( self.configFile ):
+            cfg = ConfigObj( self.configFile )
+            for cfgKey, cfgValue in cfg.iteritems():
+                print( cfgKey, cfgValue )
+                if cfgKey == 'HASH':
+                    if cfgValue != '':
+                        self.writeNewConfig( self.configFile )
+                
 
     def getCurrentBank(self, bank):
         cfg = ConfigObj( self.configFile )
