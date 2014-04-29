@@ -2,6 +2,7 @@ from config import Config
 from input.bank import Bank
 from output.ofx import Ofx
 from model.bankStatement import BankStatement
+from model.transaction import Transaction
 from csvReader import CsvReader
 
 from PIL import ImageTk
@@ -9,6 +10,7 @@ from PIL import ImageTk
 from tkinter import Tk, Toplevel, Frame, Menu, filedialog, constants, ttk, Text
 from tkinter import Label, Checkbutton, IntVar, Scrollbar, Canvas, Message, PhotoImage
 import tkinter._fix # needed for cx_freeze
+import csv
 
 class OfxConverter(Frame):
   
@@ -28,7 +30,7 @@ class OfxConverter(Frame):
         for msg in msgs:
             print( msg )
             self.log.insert('end', msg)
-        self.log['state'] = 'disabled'
+##        self.log['state'] = 'disabled'
 
     def help(self):
         t = Toplevel()
@@ -48,7 +50,11 @@ class OfxConverter(Frame):
                   "like gnucash\n\n Written in Python 3\nby Floris Groenendijk"
                   )
         l.pack(side=constants.TOP, fill="both", expand=False, padx=20, pady=20)
-    
+
+    def onFrameConfigure(self, event):
+        '''Reset the scroll region to encompass the inner frame'''
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
     def initUI(self):
       
         self.parent.title("Simple")
@@ -77,6 +83,20 @@ class OfxConverter(Frame):
         tabLogging.grid_rowconfigure(0, weight=1)
         tabLogging.grid_columnconfigure(0, weight=1)
 
+        self.tabCustomCsv = Frame( notebook )
+        
+        self.canvas = Canvas( self.tabCustomCsv )
+        self.frame = Frame( self.canvas )
+
+        scrollbar=Scrollbar(self.tabCustomCsv,orient="horizontal",command=self.canvas.xview)
+        self.canvas.configure(xscrollcommand=scrollbar.set)
+
+        self.canvas.pack(fill=constants.BOTH,expand=True)
+        scrollbar.pack(side="bottom", fill=constants.X)
+
+        self.canvas.create_window((0,0),window=self.frame,anchor='nw')
+        self.frame.bind("<Configure>", self.onFrameConfigure)
+
         self.log = Text(tabLogging, wrap='word')
         self.log.grid(row=0,column=0,sticky='news')
 
@@ -87,6 +107,7 @@ class OfxConverter(Frame):
         self.log.configure(xscrollcommand=hScroll.set, yscrollcommand=vScroll.set)
 
         notebook.add( tabFilesMain, text="Files to process" )
+        notebook.add( self.tabCustomCsv, text="Custom csv" )
         notebook.add( tabLogging, text="Logging" )
 
         notebook.pack(fill=constants.BOTH,expand=1,anchor=constants.N)
@@ -115,6 +136,32 @@ class OfxConverter(Frame):
             self.row += 1
             self.guiMap.append( [ filename, ibans, combo, c, state ] )
 
+    def addFileToCustomTab(self,filename):
+        if filename != "":
+            file = csv.reader( open(filename) )
+            lines = 1
+
+            transaction = Transaction()
+            fields = transaction.fields
+            fields.insert(0,"Undefined")
+            
+            for row in file:
+                column = 0
+                for field in row:
+                    if lines == 1:
+                        combo = ttk.Combobox(self.frame,values=transaction.fields)
+                        combo.current(0)
+                        combo.grid(row=0,column=column)
+                            
+                    Label(self.frame,text=field,borderwidth=3).grid(row=lines,column=column,sticky=constants.W,padx=1)
+                    column = column + 1
+                    ttk.Separator(self.frame,orient=constants.VERTICAL).grid(row=lines, column=column, sticky="ns")
+                    column = column + 1
+                lines = lines + 1
+                if lines > 2:
+                    break
+                
+
     def openFile(self):
         filename = filedialog.askopenfilename(parent=self.parent,
                                                 filetypes=[('Csv files','.csv'),
@@ -135,11 +182,14 @@ class OfxConverter(Frame):
                 self.writeLog( 'there\'s too many ibans, please select one from the list' )
             elif len( ibans ) == 0:
                 self.writeLog( 'No ibans found, is the file correct?' )
+                ## adding file to custom csv tab
+                
             else:
                 self.writeLog( 'Found iban: ', ibans[0][:8] )
                 ibanType = ibans[0][:8]
 
             self.addFile(filename,ibans)
+            self.addFileToCustomTab( filename )
 
 
     def parseFile(self):
