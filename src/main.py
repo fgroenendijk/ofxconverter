@@ -4,6 +4,8 @@ from output.ofx import Ofx
 from model.bankStatement import BankStatement
 from csvReader import CsvReader
 
+from PIL import ImageTk
+
 from tkinter import Tk, Toplevel, Frame, Menu, filedialog, constants, ttk, Text
 from tkinter import Label, Checkbutton, IntVar, Scrollbar, Canvas, Message, PhotoImage
 import tkinter._fix # needed for cx_freeze
@@ -33,7 +35,9 @@ class OfxConverter(Frame):
         t.wm_title("About")
         t.transient()
 
-        photo = PhotoImage(file="chameleon.gif")
+        photo = ImageTk.PhotoImage(file="chameleon.png")
+        
+##        photo = PhotoImage(file="chameleon.gif")
         w = Label(t, image=photo)
         w.photo = photo
         w.pack(fill=constants.BOTH,side=constants.LEFT,expand=True)
