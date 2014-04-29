@@ -1,4 +1,5 @@
 import csv
+import re
 from model.transaction import Transaction
 
 class CsvReader:
@@ -30,7 +31,14 @@ class CsvReader:
                 elif field[0] == 'name':
                     transaction.name = row[ int(field[1]) ]
                 elif field[0] == 'account':
-                    transaction.account = row[ int(field[1]) ]
+                    account = row[ int(field[1]) ]
+                    if not re.search( r'\w{2}\d{2}\w{4}\d{7}\w{0,16}', account ):                        
+                        account = account.replace(" ","")
+                        print( account )
+                        search = re.search(r'\w{2}\d{2}\w{4}.*'+account,' '.join(row))
+                        print(search)
+                        
+                    transaction.account = account
 
             if lineCorrect:
                 bankStatement.addTransaction( transaction )
