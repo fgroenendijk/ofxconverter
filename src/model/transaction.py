@@ -34,9 +34,8 @@ class Transaction:
             amount = amount.replace(",",":")
             amount = amount.replace(".",",")
             amount = amount.replace(":",".")
-            self.__amount = amount
-        else:
-            self.__amount = amount
+
+        self.__amount = amount.replace(" ","")
 
         if re.search("^-",amount):
             self.debet = True
@@ -49,7 +48,7 @@ class Transaction:
     def memo(self, memo):
             self.__memo = re.sub("\s{2,}"," ",memo.rstrip())
 
-    def rawType(self, rawType):
+    def rawType(self, rawType=""):
         returnType = "OTHER"
 
         # Machtiging
@@ -68,22 +67,7 @@ class Transaction:
         elif rawType == "GA": 
             returnType = "ATM"
 
-        # Overschrijving
-        elif rawType == "OV": 
-            if self.debet:
-                returnType = "DEBIT"
-            else:
-                returnType = "CREDIT"
-
-        # Bijschrijving
-        elif rawType == "BY": 
-            if isDebet:
-                returnType = "DEBIT"
-            else:
-                returnType = "CREDIT"
-
-        # Diversen
-        elif rawType == "DA":
+        else:
             if isDebet:
                 returnType = "DEBIT"
             else:
@@ -108,3 +92,4 @@ class Transaction:
         self.__type = "" 
         self.name = ""
         self.account = ""
+        self.fields = ["account","amount","date","debet","interestDate","memo","name","type"]
