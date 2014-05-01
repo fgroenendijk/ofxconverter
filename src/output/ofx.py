@@ -28,7 +28,7 @@ class Ofx:
         self.appendElement( transactionElement, 'DTPOSTED', str(transaction.date) )
         self.appendElement( transactionElement, 'TRNAMT', transaction.amount )
         self.appendElement( transactionElement, 'FITID', str(transaction.date) + transaction.amount.replace( '-', '' ) )
-        self.appendElement( transactionElement, 'NAME', transaction.name )
+        self.appendElement( transactionElement, 'NAME', transaction.description )
         if transaction.account:
             self.appendElement( transactionElement, 'BANKACCTTO', transaction.account )
         self.appendElement( transactionElement, 'memo', transaction.memo )
