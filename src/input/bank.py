@@ -9,9 +9,7 @@ class Bank:
     def checkIban(self, iban, ibanSet):
         ibanCount = 1;
         for oldIbanTuple in ibanSet:
-            print( 'tuple:', oldIbanTuple )
             (oldIban, count) = oldIbanTuple
-            print( 'count', count, 'oldIban', oldIban )
             if oldIban == iban:
                 ibanSet.remove( oldIbanTuple )
                 ibanCount = count + 1
@@ -45,13 +43,10 @@ class Bank:
                 for column in row:
                     search = re.search(r'(\w{2}\d{2}\w{4}\d{7}\w{0,16})', column.replace(' ','') )
                     if search:
-                        print( 'search:', search )
                         mainIban = self.checkIban( search.group(0), ibans )
                 if len( mainIban ) == 1:
                     break;
                 
-        print( 'ibans:', ibans )
-        print( 'mainIban:', mainIban )
         return mainIban
 
 if __name__ == '__main__':
