@@ -8,9 +8,11 @@ from csvReader import CsvReader
 from PIL import ImageTk
 
 from tkinter import Tk, Toplevel, Frame, Menu, filedialog, constants, ttk, Text
-from tkinter import Label, Checkbutton, IntVar, Scrollbar, Canvas, Message, PhotoImage
+from tkinter import Label, Checkbutton, IntVar, StringVar, Scrollbar, Canvas, Message
+from tkinter import PhotoImage, Entry, Button
 import tkinter._fix # needed for cx_freeze
 import csv
+import collections
 
 class OfxConverter(Frame):
   
@@ -19,7 +21,12 @@ class OfxConverter(Frame):
          
         self.parent = parent
         self.guiMap = []
+        self.debetValue = StringVar()
+        self.creditValue = StringVar()
         self.row = 0
+        self.frame = Frame()
+
+        self.UNUSED = "Unused"
         
         self.initUI()
 
@@ -28,7 +35,6 @@ class OfxConverter(Frame):
         if self.log.index('end-1c')!='1.0':
             self.log.insert('end', '\n')
         for msg in msgs:
-            print( msg )
             self.log.insert('end', msg)
 ##        self.log['state'] = 'disabled'
 
@@ -51,13 +57,34 @@ class OfxConverter(Frame):
                   )
         l.pack(side=constants.TOP, fill="both", expand=False, padx=20, pady=20)
 
+    def onComboboxChanged(self, event):
+        if event.widget.get() == 'debet':
+            # check which checkbox in which column was changed
+            for i in range(len(self.comboBoxes)-1):
+                if self.comboBoxes[i] == event.widget:
+                    break
+                
+            values = []
+
+            # retrieve the values of the labels in that column
+            for j in range(len(self.labels)-1):
+                if self.labels[j][i]['text'] not in values:
+                    values.append(self.labels[j][i]['text'])
+            
+            self.debetCombo['values'] = values
+            self.debetCombo.current( 0 )
+
+            if len( values ) > 1:
+                self.creditCombo['values'] = values
+                self.creditCombo.current( 1 )
+
     def onFrameConfigure(self, event):
-        '''Reset the scroll region to encompass the inner frame'''
+        # Reset the scroll region to encompass the inner frame
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def initUI(self):
       
-        self.parent.title("Simple")
+        self.parent.title("OFX Converter")
 
         menubar = Menu(self.parent)
         self.parent.config(menu=menubar)
@@ -83,19 +110,27 @@ class OfxConverter(Frame):
         tabLogging.grid_rowconfigure(0, weight=1)
         tabLogging.grid_columnconfigure(0, weight=1)
 
-        self.tabCustomCsv = Frame( notebook )
+        tabCustomCsv = Frame( notebook )
         
-        self.canvas = Canvas( self.tabCustomCsv )
-        self.frame = Frame( self.canvas )
+        self.canvas = Canvas( tabCustomCsv, highlightthickness=0 )
 
-        scrollbar=Scrollbar(self.tabCustomCsv,orient="horizontal",command=self.canvas.xview)
+        scrollbar=Scrollbar( tabCustomCsv,orient="horizontal",command=self.canvas.xview)
         self.canvas.configure(xscrollcommand=scrollbar.set)
 
         self.canvas.pack(fill=constants.BOTH,expand=True)
         scrollbar.pack(side="bottom", fill=constants.X)
 
-        self.canvas.create_window((0,0),window=self.frame,anchor='nw')
-        self.frame.bind("<Configure>", self.onFrameConfigure)
+        Label( tabCustomCsv, text="Values to determine whether the debet field concerns a debet or credit transaction" ).pack(anchor=constants.W)
+
+        Label( tabCustomCsv, text="debet", width=6 ).pack(side=constants.LEFT)
+        self.debetCombo = ttk.Combobox( tabCustomCsv,width=10,text="debet" )
+        self.debetCombo.pack(side=constants.LEFT)
+
+        Label( tabCustomCsv, text="credit", width=6 ).pack(side=constants.LEFT)
+        self.creditCombo = ttk.Combobox(tabCustomCsv,width=10,text="credit")
+        self.creditCombo.pack(side=constants.LEFT)
+
+        Button( tabCustomCsv, text="save configuration", command=self.saveConfig ).pack(side=constants.RIGHT )
 
         self.log = Text(tabLogging, wrap='word')
         self.log.grid(row=0,column=0,sticky='news')
@@ -107,7 +142,7 @@ class OfxConverter(Frame):
         self.log.configure(xscrollcommand=hScroll.set, yscrollcommand=vScroll.set)
 
         notebook.add( tabFilesMain, text="Files to process" )
-        notebook.add( self.tabCustomCsv, text="Custom csv" )
+        notebook.add( tabCustomCsv, text="Custom csv" )
         notebook.add( tabLogging, text="Logging" )
 
         notebook.pack(fill=constants.BOTH,expand=1,anchor=constants.N)
@@ -138,29 +173,68 @@ class OfxConverter(Frame):
 
     def addFileToCustomTab(self,filename):
         if filename != "":
+
+            if self.frame:
+                self.frame.pack_forget()
+                self.frame.destroy()
+            self.frame = Frame( self.canvas )
+            self.canvas.create_window((0,0),window=self.frame,anchor='nw')
+            self.frame.bind("<Configure>", self.onFrameConfigure)
+             
             file = csv.reader( open(filename) )
             lines = 1
 
             transaction = Transaction()
             fields = transaction.fields
-            fields.insert(0,"Undefined")
+            fields.insert(0,"main account")
+            fields.insert(0,self.UNUSED)
+
+            self.comboBoxes = []
+            self.labels = collections.defaultdict(list)
             
             for row in file:
                 column = 0
                 for field in row:
                     if lines == 1:
-                        combo = ttk.Combobox(self.frame,values=transaction.fields)
+                        combo = ttk.Combobox(self.frame,values=transaction.fields,state="readonly")
                         combo.current(0)
-                        combo.grid(row=0,column=column)
+                        combo.grid(row=0,column=column,sticky=constants.W)
+                        self.comboBoxes.append( combo )
+                        combo.bind('<<ComboboxSelected>>', self.onComboboxChanged)
+                        nextColumn = column + 1
+                        ttk.Separator(self.frame,orient=constants.VERTICAL).grid(row=0, column=nextColumn, sticky="ns")
                             
-                    Label(self.frame,text=field,borderwidth=3).grid(row=lines,column=column,sticky=constants.W,padx=1)
+                    label = Label(self.frame,text=field,borderwidth=3)
+                    label.grid(row=lines,column=column,sticky=constants.W,padx=1)
+                    self.labels[lines-1].append( label )
                     column = column + 1
                     ttk.Separator(self.frame,orient=constants.VERTICAL).grid(row=lines, column=column, sticky="ns")
                     column = column + 1
+
                 lines = lines + 1
                 if lines > 2:
                     break
-                
+
+    def saveConfig(self):
+        fields = []
+        memos = []
+        for i in range( len(self.comboBoxes) - 1 ):
+            key = self.comboBoxes[i].get()
+            if key == self.UNUSED:
+                continue
+            elif key == 'debet':
+                fields.append( [ key, ' '.join( [ str(i), self.creditCombo.get(), self.debetCombo.get() ] )] )
+            elif key == 'memo':
+                memos.append( str(i) )
+            elif key == 'main account':
+                fields.append( [ key, self.labels[0][i]['text'] ] )
+            else:
+                fields.append( [ key, i ] )
+
+        if len(memos) > 0:
+            fields.append( [ 'memo', ' '.join( memos ) ] )
+
+        print( fields )
 
     def openFile(self):
         filename = filedialog.askopenfilename(parent=self.parent,
