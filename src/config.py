@@ -14,7 +14,7 @@ class Config:
     # 2 date
     # 3 amount
     # 4 memo
-    # 5 name
+    # 5 description
     # 6 account
     # 7 type
     # 8 debet/credit
@@ -24,13 +24,61 @@ class Config:
         # write space to use multiple columns for one field
         config = [
             'HASH = ba9998bcf7',
-            'NL94INGB = 0,0,6,8 1,1,3,4,5',
-            'NL91RABO = 0,0,0,0,0,0,0,0'
+            'NL94INGB = 0,0,6,8 1,1,3,4,5 bij af',
+            'NL91RABO = 7,2,4,10 11 12 13 14 15 16 17 18,6,4,-1,3 C D'
             ]            
 
         cfg = ConfigObj( config )
         cfg.filename = filename
         cfg.write()
+
+    def addToConfig(self,fields):
+
+        cfg = ConfigObj( self.configFile )
+
+        if 'main account' in (x[0] for x in fields):
+            key = fields['main account'][:8] 
+        
+            if 'interestDate' in (x[0] for x in fields):
+                fields.append( fields['interestDate'] )
+            else:
+                fields.append( "" )
+                
+            if 'date' in (x[0] for x in fields):
+                fields.append( [ 'date', fieldNumber ] )
+            else:
+                fields.append( "" )
+                
+            if 'amount' in (x[0] for x in fields):
+                fields.append( [ 'amount', fieldNumber ] )
+            else:
+                fields.append( "" )
+                
+            if 'memo' in (x[0] for x in fields):
+                fields.append( [ 'memo', fieldNumber ] )
+            else:
+                fields.append( "" )
+                
+            if 'description' in (x[0] for x in fields):
+                fields.append( [ 'description', fieldNumber ] )
+            else:
+                fields.append( "" )
+                
+            if 'account' in (x[0] for x in fields):
+                fields.append( [ 'account', fieldNumber ] )
+            else:
+                fields.append( "" )
+                
+            if 'type' in (x[0] for x in fields):
+                fields.append( [ 'type', fieldNumber ] )
+            else:
+                fields.append( "" )
+                
+            if 'debet/credit' in (x[0] for x in fields):
+                fields.append( [ 'debet/credit', fieldNumber ] )        
+            else:
+                fields.append( "" )
+                
 
     def checkForConfig(self):
         home = expanduser("~")
@@ -66,8 +114,8 @@ class Config:
                         fields.append( [ 'amount', fieldNumber ] )
                     elif not 'memo' in (x[0] for x in fields):
                         fields.append( [ 'memo', fieldNumber ] )
-                    elif not 'name' in (x[0] for x in fields):
-                        fields.append( [ 'name', fieldNumber ] )
+                    elif not 'description' in (x[0] for x in fields):
+                        fields.append( [ 'description', fieldNumber ] )
                     elif not 'account' in (x[0] for x in fields):
                         fields.append( [ 'account', fieldNumber ] )
                     elif not 'type' in (x[0] for x in fields):
