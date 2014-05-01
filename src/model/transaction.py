@@ -68,7 +68,7 @@ class Transaction:
             returnType = "ATM"
 
         else:
-            if isDebet:
+            if self.debet:
                 returnType = "DEBIT"
             else:
                 returnType = "CREDIT"
@@ -77,6 +77,8 @@ class Transaction:
 
     @property
     def type(self):
+        if self.__type == "":
+            self.rawType()
         return self.rawType( self.__type )
 
     @type.setter
@@ -90,6 +92,6 @@ class Transaction:
         self.__amount = ""
         self.__memo = ""
         self.__type = "" 
-        self.name = ""
+        self.description = ""
         self.account = ""
-        self.fields = ["account","amount","date","debet","interestDate","memo","name","type"]
+        self.fields = ["account","amount","date","debet","interestDate","memo","description","type"]
