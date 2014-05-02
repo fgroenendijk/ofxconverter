@@ -25,7 +25,8 @@ class CsvReader:
                     transaction.amount = row[ int(field[1]) ]
                 elif field[0] == 'memo':
                     for i in field[1].split():
-                        transaction.memo += row[ int(i) ]
+                        transaction.memo += ' ' + row[ int(i) ]
+                        print( transaction.memo )
                 elif field[0] == 'type':
                     transaction.type = row[ int(field[1]) ]
                 elif field[0] == 'name':
@@ -39,6 +40,13 @@ class CsvReader:
                         print(search)
                         
                     transaction.account = account
+                elif field[0] == 'credit/debit':
+                    (fieldNumber,credit,debit) = field[1].split()
+                    creditDebit = row[ int(fieldNumber) ]
+                    if creditDebit == credit:
+                        transaction.debit = False
+                    elif creditDebit == debit:
+                        transaction.debit = True
 
             if lineCorrect:
                 bankStatement.addTransaction( transaction )

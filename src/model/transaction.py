@@ -26,6 +26,8 @@ class Transaction:
 
     @property
     def amount(self):
+        if self.debit and not re.search("^-",self.__amount):
+            self.__amount = "-" + self.__amount
         return self.__amount
     
     @amount.setter
@@ -38,7 +40,7 @@ class Transaction:
         self.__amount = amount.replace(" ","")
 
         if re.search("^-",amount):
-            self.debet = True
+            self.debit = True
 
     @property
     def memo(self):
@@ -68,7 +70,7 @@ class Transaction:
             returnType = "ATM"
 
         else:
-            if self.debet:
+            if self.debit:
                 returnType = "DEBIT"
             else:
                 returnType = "CREDIT"
@@ -86,7 +88,7 @@ class Transaction:
         self.__type = type
 
     def __init__(self):
-        self.debet = False
+        self.debit = False
         self.__interestDate = 0
         self.__date = 0
         self.__amount = ""
@@ -94,4 +96,4 @@ class Transaction:
         self.__type = "" 
         self.description = ""
         self.account = ""
-        self.fields = ["account","amount","date","debet","interestDate","memo","description","type"]
+        self.fields = ["account","amount","date","debit","interestDate","memo","description","type"]

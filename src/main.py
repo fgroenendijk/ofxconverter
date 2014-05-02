@@ -21,7 +21,7 @@ class OfxConverter(Frame):
          
         self.parent = parent
         self.guiMap = []
-        self.debetValue = StringVar()
+        self.debitValue = StringVar()
         self.creditValue = StringVar()
         self.row = 0
         self.frame = Frame()
@@ -58,7 +58,7 @@ class OfxConverter(Frame):
         l.pack(side=constants.TOP, fill="both", expand=False, padx=20, pady=20)
 
     def onComboboxChanged(self, event):
-        if event.widget.get() == 'debet':
+        if event.widget.get() == 'debit':
             # check which checkbox in which column was changed
             for i in range(len(self.comboBoxes)-1):
                 if self.comboBoxes[i] == event.widget:
@@ -71,12 +71,12 @@ class OfxConverter(Frame):
                 if self.labels[j][i]['text'] not in values:
                     values.append(self.labels[j][i]['text'])
             
-            self.debetCombo['values'] = values
-            self.debetCombo.current( 0 )
+            self.creditCombo['values'] = values
+            self.creditCombo.current( 0 )
 
             if len( values ) > 1:
-                self.creditCombo['values'] = values
-                self.creditCombo.current( 1 )
+                self.debitCombo['values'] = values
+                self.debitCombo.current( 1 )
 
     def onFrameConfigure(self, event):
         # Reset the scroll region to encompass the inner frame
@@ -120,15 +120,15 @@ class OfxConverter(Frame):
         self.canvas.pack(fill=constants.BOTH,expand=True)
         scrollbar.pack(side="bottom", fill=constants.X)
 
-        Label( tabCustomCsv, text="Values to determine whether the debet field concerns a debet or credit transaction" ).pack(anchor=constants.W)
-
-        Label( tabCustomCsv, text="debet", width=6 ).pack(side=constants.LEFT)
-        self.debetCombo = ttk.Combobox( tabCustomCsv,width=10,text="debet" )
-        self.debetCombo.pack(side=constants.LEFT)
+        Label( tabCustomCsv, text="Values to determine whether the debit field concerns a debit or credit transaction" ).pack(anchor=constants.W)
 
         Label( tabCustomCsv, text="credit", width=6 ).pack(side=constants.LEFT)
         self.creditCombo = ttk.Combobox(tabCustomCsv,width=10,text="credit")
         self.creditCombo.pack(side=constants.LEFT)
+
+        Label( tabCustomCsv, text="debit", width=6 ).pack(side=constants.LEFT)
+        self.debitCombo = ttk.Combobox( tabCustomCsv,width=10,text="debit" )
+        self.debitCombo.pack(side=constants.LEFT)
 
         Button( tabCustomCsv, text="save configuration", command=self.saveConfig ).pack(side=constants.RIGHT )
 
@@ -222,8 +222,8 @@ class OfxConverter(Frame):
             key = self.comboBoxes[i].get()
             if key == self.UNUSED:
                 continue
-            elif key == 'debet':
-                fields.append( [ key, ' '.join( [ str(i), self.creditCombo.get(), self.debetCombo.get() ] )] )
+            elif key == 'debit':
+                fields.append( [ key, ' '.join( [ str(i), self.creditCombo.get(), self.debitCombo.get() ] )] )
             elif key == 'memo':
                 memos.append( str(i) )
             elif key == 'main account':

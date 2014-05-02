@@ -17,7 +17,7 @@ class Config:
     # 5 description
     # 6 account
     # 7 type
-    # 8 debet/credit
+    # 8 debit/credit
 
     def writeNewConfig(self,filename):
         # number is column to read
@@ -74,8 +74,8 @@ class Config:
             else:
                 fields.append( "" )
                 
-            if 'debet/credit' in (x[0] for x in fields):
-                fields.append( [ 'debet/credit', fieldNumber ] )        
+            if 'credit/debit' in (x[0] for x in fields):
+                fields.append( [ 'credit/debit', fieldNumber ] )        
             else:
                 fields.append( "" )
                 
@@ -120,8 +120,8 @@ class Config:
                         fields.append( [ 'account', fieldNumber ] )
                     elif not 'type' in (x[0] for x in fields):
                         fields.append( [ 'type', fieldNumber ] )
-                    elif not 'debet/credit' in (x[0] for x in fields):
-                        fields.append( [ 'debet/credit', fieldNumber ] )
+                    elif not 'credit/debit' in (x[0] for x in fields):
+                        fields.append( [ 'credit/debit', fieldNumber ] )
 
         return fields
                         
