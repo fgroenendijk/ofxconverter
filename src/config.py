@@ -105,7 +105,7 @@ class Config:
                 print( "Repository at", configDir, "already initialized" )
         elif isfile( self.configFile ):
             repo = pygit2.Repository( configDir )
-            repo.checkout( 'config' )
+            repo.checkout()
                 
 
     def getCurrentBank(self, bank):
