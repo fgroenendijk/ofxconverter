@@ -32,12 +32,9 @@ class CsvReader:
                     transaction.description = row[ int(field[1]) ].strip()
                 elif field[0] == 'account':
                     account = row[ int(field[1]) ]
-                    print( account )
                     if not re.search( r'\w{2}\d{2}\w{4}\d{7}\w{0,16}', account ):                        
                         account = account.replace(" ","")
-                        print( "account", account )
                         search = re.search(r'\w{2}\d{2}\w{4}.*'+account,' '.join(row))
-                        print( "account",search)
                         
                     transaction.account = account
                 elif field[0] == 'credit/debit':
@@ -47,8 +44,6 @@ class CsvReader:
                         transaction.debit = False
                     elif creditDebit == debit:
                         transaction.debit = True
-
-                print( transaction.description )
 
             if lineCorrect:
                 bankStatement.addTransaction( transaction )
