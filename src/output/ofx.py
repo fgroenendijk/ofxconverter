@@ -31,7 +31,7 @@ class Ofx:
         self.appendElement( transactionElement, 'NAME', transaction.description )
         if transaction.account:
             self.appendElement( transactionElement, 'BANKACCTTO', transaction.account )
-        self.appendElement( transactionElement, 'memo', transaction.memo )
+        self.appendElement( transactionElement, 'MEMO', transaction.memo )
 
     def createXmlFile( self, filename, bankStatement ):
 
