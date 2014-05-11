@@ -6,6 +6,7 @@ from os.path import isfile
 from os.path import exists
 from os import makedirs
 import errno
+import pygit2
 
 class Config:
 
@@ -35,72 +36,80 @@ class Config:
     def addToConfig(self,fields):
 
         cfg = ConfigObj( self.configFile )
+        cfgValue = []
 
-        if 'main account' in (x[0] for x in fields):
+        if 'main account' in fields:
             key = fields['main account'][:8] 
         
-            if 'interestDate' in (x[0] for x in fields):
-                fields.append( fields['interestDate'] )
+            if 'interestDate' in fields:
+                cfgValue.append( str(fields['interestDate']) )
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
                 
-            if 'date' in (x[0] for x in fields):
-                fields.append( [ 'date', fieldNumber ] )
+            if 'date' in fields:
+                cfgValue.append( str(fields['date']) )
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
                 
-            if 'amount' in (x[0] for x in fields):
-                fields.append( [ 'amount', fieldNumber ] )
+            if 'amount' in fields:
+                cfgValue.append( str(fields['amount']) )
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
                 
-            if 'memo' in (x[0] for x in fields):
-                fields.append( [ 'memo', fieldNumber ] )
+            if 'memo' in fields:
+                cfgValue.append( str(fields['memo']) )
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
                 
-            if 'description' in (x[0] for x in fields):
-                fields.append( [ 'description', fieldNumber ] )
+            if 'description' in fields:
+                cfgValue.append( str(fields['description']) )
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
                 
-            if 'account' in (x[0] for x in fields):
-                fields.append( [ 'account', fieldNumber ] )
+            if 'account' in fields:
+                cfgValue.append( str(fields['account']) )
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
                 
-            if 'type' in (x[0] for x in fields):
-                fields.append( [ 'type', fieldNumber ] )
+            if 'type' in fields:
+                cfgValue.append( str(fields['type']) )
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
                 
-            if 'credit/debit' in (x[0] for x in fields):
-                fields.append( [ 'credit/debit', fieldNumber ] )        
+            if 'credit/debit' in fields:
+                cfgValue.append( str(fields['credit/debit']) )        
             else:
-                fields.append( "" )
+                cfgValue.append( '-1' )
+
+        cfg[ key ] = cfgValue
+        cfg.write()
+
+        return [ key, cfgValue ]
                 
 
     def checkForConfig(self):
         home = expanduser("~")
+
         configDir = join( home, '.ofxconverter' )
 
-        makedirs( configDir, exist_ok=True )       
+        makedirs( configDir, exist_ok=True )
+
+        repo_url = 'git://git@git.code.sf.net/p/ofxconverter/code'
+
         self.configFile = join( configDir, 'banks.config' )
         
         if not exists( self.configFile ) or not isfile( self.configFile ):
-            print( 'Write new config file:', self.configFile )
-            self.writeNewConfig( self.configFile )
+            try:
+                repo = pygit2.clone_repository(repo_url, configDir, checkout_branch='config')
+            except KeyError:
+                print( "Repository at", configDir, "already initialized" )
         elif isfile( self.configFile ):
-            cfg = ConfigObj( self.configFile )
-            for cfgKey, cfgValue in cfg.iteritems():
-                print( cfgKey, cfgValue )
-                if cfgKey == 'HASH':
-                    if cfgValue != '':
-                        self.writeNewConfig( self.configFile )
+            repo = pygit2.Repository( configDir )
+            repo.checkout( 'config' )
                 
 
     def getCurrentBank(self, bank):
-        cfg = ConfigObj( self.configFile )
+        cfg = ConfigObj( self.configFile )  
         fields = []
         for cfgBank, cfgBankValue in cfg.iteritems():
             if cfgBank == bank:
