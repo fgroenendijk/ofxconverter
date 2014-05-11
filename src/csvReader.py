@@ -11,7 +11,7 @@ class CsvReader:
             transaction = Transaction()
             lineCorrect = True
             for field in self.fields:
-                if field[0] == 'interest':
+                if field[0] == 'interestDate':
                     if row[ int(field[1]) ].isdigit():
                         transaction.interestDate = row[ int(field[1]) ]
                     else:
@@ -26,18 +26,18 @@ class CsvReader:
                 elif field[0] == 'memo':
                     for i in field[1].split():
                         transaction.memo += ' ' + row[ int(i) ]
-                        print( transaction.memo )
                 elif field[0] == 'type':
                     transaction.type = row[ int(field[1]) ]
-                elif field[0] == 'name':
-                    transaction.name = row[ int(field[1]) ]
+                elif field[0] == 'description':
+                    transaction.description = row[ int(field[1]) ].strip()
                 elif field[0] == 'account':
                     account = row[ int(field[1]) ]
+                    print( account )
                     if not re.search( r'\w{2}\d{2}\w{4}\d{7}\w{0,16}', account ):                        
                         account = account.replace(" ","")
-                        print( account )
+                        print( "account", account )
                         search = re.search(r'\w{2}\d{2}\w{4}.*'+account,' '.join(row))
-                        print(search)
+                        print( "account",search)
                         
                     transaction.account = account
                 elif field[0] == 'credit/debit':
@@ -47,6 +47,8 @@ class CsvReader:
                         transaction.debit = False
                     elif creditDebit == debit:
                         transaction.debit = True
+
+                print( transaction.description )
 
             if lineCorrect:
                 bankStatement.addTransaction( transaction )
