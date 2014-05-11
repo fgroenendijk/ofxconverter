@@ -48,7 +48,7 @@ class Transaction:
     
     @memo.setter
     def memo(self, memo):
-            self.__memo = re.sub("\s{2,}"," ",memo.rstrip())
+            self.__memo = re.sub("\s{2,}"," ",memo.strip())
 
     def rawType(self, rawType=""):
         returnType = "OTHER"
@@ -96,4 +96,4 @@ class Transaction:
         self.__type = "" 
         self.description = ""
         self.account = ""
-        self.fields = ["account","amount","date","debit","interestDate","memo","description","type"]
+        self.fields = ["account","amount","date","credit/debit","interestDate","memo","description","type"]
