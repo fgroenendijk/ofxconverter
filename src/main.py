@@ -58,7 +58,7 @@ class OfxConverter(Frame):
         l.pack(side=constants.TOP, fill="both", expand=False, padx=20, pady=20)
 
     def onComboboxChanged(self, event):
-        if event.widget.get() == 'debit':
+        if event.widget.get() == 'credit/debit':
             # check which checkbox in which column was changed
             for i in range(len(self.comboBoxes)-1):
                 if self.comboBoxes[i] == event.widget:
@@ -67,7 +67,7 @@ class OfxConverter(Frame):
             values = []
 
             # retrieve the values of the labels in that column
-            for j in range(len(self.labels)-1):
+            for j in range(len(self.labels)):
                 if self.labels[j][i]['text'] not in values:
                     values.append(self.labels[j][i]['text'])
             
@@ -216,25 +216,27 @@ class OfxConverter(Frame):
                     break
 
     def saveConfig(self):
-        fields = []
+        fields = {}
         memos = []
         for i in range( len(self.comboBoxes) - 1 ):
             key = self.comboBoxes[i].get()
             if key == self.UNUSED:
                 continue
-            elif key == 'debit':
-                fields.append( [ key, ' '.join( [ str(i), self.creditCombo.get(), self.debitCombo.get() ] )] )
+            elif key == 'credit/debit':
+                fields[ key ] = ' '.join( [ str(i), self.creditCombo.get(), self.debitCombo.get() ] )
             elif key == 'memo':
                 memos.append( str(i) )
             elif key == 'main account':
-                fields.append( [ key, self.labels[0][i]['text'] ] )
+                fields[ key ] = self.labels[0][i]['text']
             else:
-                fields.append( [ key, i ] )
+                fields[ key ] = i
 
         if len(memos) > 0:
-            fields.append( [ 'memo', ' '.join( memos ) ] )
+            fields['memo'] = ' '.join( memos )
 
-        print( fields )
+        config = Config()
+        (bankKey, bankValue) = config.addToConfig( fields )
+        self.writeLog( 'key', bankKey, "with value", bankValue, "added to config file" ) 
 
     def openFile(self):
         filename = filedialog.askopenfilename(parent=self.parent,
