@@ -19,23 +19,23 @@ class Config:
     # 6 account
     # 7 type
     # 8 debit/credit
+    # 9 currency
 
-    def writeNewConfig(self,filename):
-        # number is column to read
-        # write space to use multiple columns for one field
-        config = [
-            'HASH = ba9998bcf7',
-            'NL94INGB = 0,0,6,8 1,1,3,4,5 bij af',
-            'NL91RABO = 7,2,4,10 11 12 13 14 15 16 17 18,6,4,-1,3 C D'
-            ]            
+    def getCurrencies(self):
+        cfg = ConfigObj( self.configFile, encoding="utf8", default_encoding="utf8" )
 
-        cfg = ConfigObj( config )
-        cfg.filename = filename
-        cfg.write()
+        currencies = {}
 
-    def addToConfig(self,fields):
+        for currencyName, currencyIso in cfg['currencies'].iteritems():
+            currencies[ currencyName ] = currencyIso
 
-        cfg = ConfigObj( self.configFile )
+        return currencies
+        
+
+    def addToConfig(self,fields,section='banks'):
+
+#        cfg = ConfigObj( open( self.configFile, 'rt', encoding='utf-8' ) )
+        cfg = ConfigObj( self.configFile, encoding='utf-8' )
         cfgValue = []
 
         if 'main account' in fields:
@@ -80,8 +80,14 @@ class Config:
                 cfgValue.append( str(fields['credit/debit']) )        
             else:
                 cfgValue.append( '-1' )
+            if 'currency' in fields:
+                cfgValue.append( fields['currency'] )        
+            else:
+                cfgValue.append( '-1' )
 
-        cfg[ key ] = cfgValue
+        cfg[ section ] = {}
+        cfg[ section ][ key ] = cfgValue
+        print( "trying to write", key, "with value", cfgValue, "in", section )
         cfg.write()
 
         return [ key, cfgValue ]
@@ -109,12 +115,11 @@ class Config:
                 
 
     def getCurrentBank(self, bank):
-        cfg = ConfigObj( self.configFile )  
+        cfg = ConfigObj( self.configFile, encoding="utf8", default_encoding="utf8" )  
         fields = []
-        for cfgBank, cfgBankValue in cfg.iteritems():
+        for cfgBank, cfgBankValue in cfg['banks'].iteritems():
             if cfgBank == bank:
                 for fieldNumber in cfgBankValue:
-                    print( fieldNumber )
                     if not 'interestDate' in (x[0] for x in fields):
                         fields.append( [ 'interestDate', fieldNumber ] )
                     elif not 'date' in (x[0] for x in fields):
@@ -131,6 +136,8 @@ class Config:
                         fields.append( [ 'type', fieldNumber ] )
                     elif not 'credit/debit' in (x[0] for x in fields):
                         fields.append( [ 'credit/debit', fieldNumber ] )
+                    elif not 'currency' in (x[0] for x in fields):
+                        fields.append( [ 'currency', fieldNumber ] )
 
         return fields
                         
