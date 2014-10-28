@@ -96,4 +96,4 @@ class Transaction:
         self.__type = "" 
         self.description = ""
         self.account = ""
-        self.fields = ["account","amount","date","credit/debit","interestDate","memo","description","type"]
+        self.fields = ["account","amount","currency","date","credit/debit","debit","interestDate","memo","description","type"]
