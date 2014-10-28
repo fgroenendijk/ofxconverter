@@ -122,11 +122,21 @@ class OfxConverter(Frame):
 
         Label( tabCustomCsv, text="Values to determine whether the debit field concerns a debit or credit transaction" ).pack(anchor=constants.W)
 
-        Label( tabCustomCsv, text="credit", width=6 ).pack(side=constants.LEFT)
+        currencyLine = Frame( tabCustomCsv )
+        currencyLine.pack(fill=constants.X)
+        Label( currencyLine, text="currency", width=7, anchor=constants.W ).pack(side=constants.LEFT)
+        self.currencyCombo = ttk.Combobox( currencyLine,width=30,text="currency" )
+        self.currencyCombo.pack(side=constants.LEFT)
+
+        config = Config()
+        self.currencies = config.getCurrencies()
+        self.currencyCombo['values'] = list(sorted(self.currencies.keys()))
+
+        Label( tabCustomCsv, text="credit", width=7, anchor=constants.W ).pack(side=constants.LEFT)
         self.creditCombo = ttk.Combobox(tabCustomCsv,width=10,text="credit")
         self.creditCombo.pack(side=constants.LEFT)
 
-        Label( tabCustomCsv, text="debit", width=6 ).pack(side=constants.LEFT)
+        Label( tabCustomCsv, text="debit", width=6, anchor=constants.W ).pack(side=constants.LEFT)
         self.debitCombo = ttk.Combobox( tabCustomCsv,width=10,text="debit" )
         self.debitCombo.pack(side=constants.LEFT)
 
