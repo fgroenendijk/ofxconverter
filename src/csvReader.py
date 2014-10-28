@@ -44,6 +44,8 @@ class CsvReader:
                         transaction.debit = False
                     elif creditDebit == debit:
                         transaction.debit = True
+                elif field[0] == 'currency' and len(bankStatement.currency) == 0:
+                    bankStatement.currency = field[1]                   
 
             if lineCorrect:
                 bankStatement.addTransaction( transaction )
