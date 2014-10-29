@@ -111,18 +111,35 @@ class OfxConverter(Frame):
         tabLogging.grid_columnconfigure(0, weight=1)
 
         tabCustomCsv = Frame( notebook )
-        
-        self.canvas = Canvas( tabCustomCsv, highlightthickness=0 )
+        tabCustomCsv.pack(fill=constants.BOTH,expand=1)
 
-        scrollbar=Scrollbar( tabCustomCsv,orient="horizontal",command=self.canvas.xview)
+        scrollFrame = Frame( tabCustomCsv )
+        scrollFrame.pack(fill=constants.BOTH,expand=1,anchor="ne")
+        
+        canvasFrame = Frame( tabCustomCsv )
+        canvasFrame.pack(fill=constants.BOTH,expand=1,anchor="sw")
+        
+        self.canvas = Canvas( canvasFrame, highlightthickness=0 )
+
+        scrollbar=Scrollbar( scrollFrame,orient="horizontal",command=self.canvas.xview)
         self.canvas.configure(xscrollcommand=scrollbar.set)
 
         self.canvas.pack(fill=constants.BOTH,expand=True)
         scrollbar.pack(side="bottom", fill=constants.X)
 
-        Label( tabCustomCsv, text="Values to determine whether the debit field concerns a debit or credit transaction" ).pack(anchor=constants.W)
+        scrollbar=Scrollbar( scrollFrame,orient="vertical",command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=scrollbar.set)
 
-        currencyLine = Frame( tabCustomCsv )
+        scrollbar.pack(side="left", fill=constants.Y)
+        self.canvas.pack(fill=constants.BOTH,expand=1,anchor="ne")
+
+        # begin of config frame
+
+        configurationFrame = Frame( tabCustomCsv, bg="magenta" )
+
+        Label( configurationFrame, text="Values to determine whether the debit field concerns a debit or credit transaction and set the currency" ).pack(anchor=constants.W)
+
+        currencyLine = Frame( configurationFrame )
         currencyLine.pack(fill=constants.X)
         Label( currencyLine, text="currency", width=7, anchor=constants.W ).pack(side=constants.LEFT)
         self.currencyCombo = ttk.Combobox( currencyLine,width=30,text="currency" )
@@ -132,15 +149,19 @@ class OfxConverter(Frame):
         self.currencies = config.getCurrencies()
         self.currencyCombo['values'] = list(sorted(self.currencies.keys()))
 
-        Label( tabCustomCsv, text="credit", width=7, anchor=constants.W ).pack(side=constants.LEFT)
-        self.creditCombo = ttk.Combobox(tabCustomCsv,width=10,text="credit")
+        Label( configurationFrame, text="credit", width=7, anchor=constants.W ).pack(side=constants.LEFT)
+        self.creditCombo = ttk.Combobox(configurationFrame,width=10,text="credit")
         self.creditCombo.pack(side=constants.LEFT)
 
-        Label( tabCustomCsv, text="debit", width=6, anchor=constants.W ).pack(side=constants.LEFT)
-        self.debitCombo = ttk.Combobox( tabCustomCsv,width=10,text="debit" )
+        Label( configurationFrame, text="debit", width=6, anchor=constants.W ).pack(side=constants.LEFT)
+        self.debitCombo = ttk.Combobox( configurationFrame,width=10,text="debit" )
         self.debitCombo.pack(side=constants.LEFT)
 
-        Button( tabCustomCsv, text="save configuration", command=self.saveConfig ).pack(side=constants.RIGHT )
+        Button( configurationFrame, text="save configuration", command=self.saveConfig ).pack(side=constants.RIGHT )
+
+        configurationFrame.pack(fill=constants.X,expand=1,anchor="s")
+
+        # end of config frame
 
         self.log = Text(tabLogging, wrap='word')
         self.log.grid(row=0,column=0,sticky='news')
@@ -222,7 +243,7 @@ class OfxConverter(Frame):
                     column = column + 1
 
                 lines = lines + 1
-                if lines > 2:
+                if lines > 11:
                     break
 
     def saveConfig(self):
