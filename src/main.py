@@ -110,32 +110,45 @@ class OfxConverter(Frame):
         tabLogging.grid_rowconfigure(0, weight=1)
         tabLogging.grid_columnconfigure(0, weight=1)
 
-        tabCustomCsv = Frame( notebook )
-        tabCustomCsv.pack(fill=constants.BOTH,expand=1)
+        # begin of custom csv frame
 
-        scrollFrame = Frame( tabCustomCsv )
-        scrollFrame.pack(fill=constants.BOTH,expand=1,anchor="ne")
-        
-        canvasFrame = Frame( tabCustomCsv )
-        canvasFrame.pack(fill=constants.BOTH,expand=1,anchor="sw")
+        tabCustomCsv = Frame( notebook )
+
+        verticalScrollFrame = Frame( tabCustomCsv )
+        verticalScrollFrame.grid( row=0, column=0, rowspan=3, sticky="WNS" )
+
+        tabCustomCsv.grid_columnconfigure(0, weight=0)
+        tabCustomCsv.grid_columnconfigure(1, weight=1)
+        tabCustomCsv.grid_rowconfigure(2,weight=1)
+
+        comboFrame = Frame( tabCustomCsv )
+        comboFrame.grid( row=1, column=1, sticky="WE" )
+ 
+        canvasFrame = Frame( tabCustomCsv)
+        canvasFrame.grid( row=2, column=1, sticky="NEWS" )
+
+        horizontalScrollFrame = Frame( tabCustomCsv )
+        horizontalScrollFrame.grid( row=3, column=1, columnspan=1, sticky="WE" )
         
         self.canvas = Canvas( canvasFrame, highlightthickness=0 )
 
-        scrollbar=Scrollbar( scrollFrame,orient="horizontal",command=self.canvas.xview)
+        scrollbar=Scrollbar( horizontalScrollFrame,orient="horizontal",command=self.canvas.xview)
         self.canvas.configure(xscrollcommand=scrollbar.set)
 
         self.canvas.pack(fill=constants.BOTH,expand=True)
         scrollbar.pack(side="bottom", fill=constants.X)
 
-        scrollbar=Scrollbar( scrollFrame,orient="vertical",command=self.canvas.yview)
+        scrollbar=Scrollbar( verticalScrollFrame,orient="vertical",command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=scrollbar.set)
 
         scrollbar.pack(side="left", fill=constants.Y)
-        self.canvas.pack(fill=constants.BOTH,expand=1,anchor="ne")
+        self.canvas.pack(fill=constants.BOTH,expand=1,anchor="nw")
+
+        # end of custom csv frame
 
         # begin of config frame
 
-        configurationFrame = Frame( tabCustomCsv, bg="magenta" )
+        configurationFrame = Frame( tabCustomCsv )
 
         Label( configurationFrame, text="Values to determine whether the debit field concerns a debit or credit transaction and set the currency" ).pack(anchor=constants.W)
 
@@ -159,7 +172,7 @@ class OfxConverter(Frame):
 
         Button( configurationFrame, text="save configuration", command=self.saveConfig ).pack(side=constants.RIGHT )
 
-        configurationFrame.pack(fill=constants.X,expand=1,anchor="s")
+        configurationFrame.grid( row=4, column=0, columnspan=2, sticky="WES")
 
         # end of config frame
 
