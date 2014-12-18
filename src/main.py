@@ -121,8 +121,8 @@ class OfxConverter(Frame):
         tabCustomCsv.grid_columnconfigure(1, weight=1)
         tabCustomCsv.grid_rowconfigure(2,weight=1)
 
-        comboFrame = Frame( tabCustomCsv )
-        comboFrame.grid( row=1, column=1, sticky="WE" )
+        self.comboFrame = Frame( tabCustomCsv )
+        self.comboFrame.grid( row=1, column=1, sticky="WE" )
  
         canvasFrame = Frame( tabCustomCsv)
         canvasFrame.grid( row=2, column=1, sticky="NEWS" )
