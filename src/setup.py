@@ -3,24 +3,24 @@ from cx_Freeze import setup, Executable
 import sys
 base = None
 icon = None
-if sys.platform == 'win32':
-    base = 'Win32GUI'
-    icon = '../images/chameleon-icon.png'
+if sys.platform == u'win32':
+    base = u'Win32GUI'
+    icon = u'../images/chameleon-icon.png'
 
 executables = [
-    Executable("main.py",
+    Executable(u"main.py",
                icon=icon,
                appendScriptToExe=True,
                appendScriptToLibrary=False,
                base=base,
-               targetName = 'ofxconverter'
+               targetName = u'ofxconverter'
                )
 ]
 
 buildOptions = dict(create_shared_zip=False)
 
-setup(name='OFXConverter',
-      version = '1.0',
-      description = 'Convert csv to ofx file',
+setup(name=u'OFXConverter',
+      version = u'1.0',
+      description = u'Convert csv to ofx file',
       options = dict(build_exe = buildOptions),
       executables = executables)

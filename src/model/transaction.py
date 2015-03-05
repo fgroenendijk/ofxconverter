@@ -1,6 +1,6 @@
 import re
 
-class Transaction:
+class Transaction(object):
 
     @property
     def interestDate(self):
@@ -26,20 +26,20 @@ class Transaction:
 
     @property
     def amount(self):
-        if self.debit and not re.search("^-",self.__amount):
-            self.__amount = "-" + self.__amount
+        if self.debit and not re.search(u"^-",self.__amount):
+            self.__amount = u"-" + self.__amount
         return self.__amount
     
     @amount.setter
     def amount(self, amount):
-        if re.search("-?\d*\.?\d+,\d+$", amount):
-            amount = amount.replace(",",":")
-            amount = amount.replace(".",",")
-            amount = amount.replace(":",".")
+        if re.search(u"-?\d*\.?\d+,\d+$", amount):
+            amount = amount.replace(u",",u":")
+            amount = amount.replace(u".",u",")
+            amount = amount.replace(u":",u".")
 
-        self.__amount = amount.replace(" ","")
+        self.__amount = amount.replace(u" ",u"")
 
-        if re.search("^-",amount):
+        if re.search(u"^-",amount):
             self.debit = True
 
     @property
@@ -48,38 +48,38 @@ class Transaction:
     
     @memo.setter
     def memo(self, memo):
-            self.__memo = re.sub("\s{2,}"," ",memo.strip())
+            self.__memo = re.sub(u"\s{2,}",u" ",memo.strip())
 
-    def rawType(self, rawType=""):
-        returnType = "OTHER"
+    def rawType(self, rawType=u""):
+        returnType = u"OTHER"
 
         # Machtiging
-        if rawType == "MA": 
-            returnType = "DIRECTDEBIT"
+        if rawType == u"MA": 
+            returnType = u"DIRECTDEBIT"
 
         # Telebankieren
-        elif rawType == "TB": 
-            returnType = "PAYMENT"
+        elif rawType == u"TB": 
+            returnType = u"PAYMENT"
 
         # Betaalautomaat
-        elif rawType == "BA": 
-            returnType = "POS"
+        elif rawType == u"BA": 
+            returnType = u"POS"
 
         # Geldautomaat (pin)
-        elif rawType == "GA": 
-            returnType = "ATM"
+        elif rawType == u"GA": 
+            returnType = u"ATM"
 
         else:
             if self.debit:
-                returnType = "DEBIT"
+                returnType = u"DEBIT"
             else:
-                returnType = "CREDIT"
+                returnType = u"CREDIT"
 
         return returnType
 
     @property
     def type(self):
-        if self.__type == "":
+        if self.__type == u"":
             self.rawType()
         return self.rawType( self.__type )
 
@@ -91,9 +91,9 @@ class Transaction:
         self.debit = False
         self.__interestDate = 0
         self.__date = 0
-        self.__amount = ""
-        self.__memo = ""
-        self.__type = "" 
-        self.description = ""
-        self.account = ""
-        self.fields = ["account","amount","currency","date","credit/debit","debit","interestDate","memo","description","type"]
+        self.__amount = u""
+        self.__memo = u""
+        self.__type = u"" 
+        self.description = u""
+        self.account = u""
+        self.fields = [u"account",u"amount",u"currency",u"date",u"credit/debit",u"debit",u"interestDate",u"memo",u"description",u"type"]

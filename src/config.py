@@ -1,3 +1,4 @@
+import sys
 from configobj import ConfigObj
 from os.path import expanduser
 from os.path import join
@@ -5,6 +6,7 @@ from os.path import isdir
 from os.path import isfile
 from os.path import exists
 from os import makedirs
+from os import path
 import errno
 import pygit2
 
@@ -98,7 +100,16 @@ class Config:
 
         configDir = join( home, '.ofxconverter' )
 
-        makedirs( configDir, exist_ok=True )
+        if sys.version_info >= (3,0):
+            makedirs( configDir, exist_ok=True )
+        else:
+            try:
+                makedirs(configDir)
+            except OSError as exc:  # Python >2.5
+                if exc.errno == errno.EEXIST and path.isdir(configDir):
+                    pass
+            else:
+                raise
 
         repo_url = 'git://git@git.code.sf.net/p/ofxconverter/code'
 
