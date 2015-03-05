@@ -1,3 +1,5 @@
+import sys
+import tkFileDialog
 from config import Config
 from input.bank import Bank
 from output.ofx import Ofx
@@ -285,7 +287,13 @@ class OfxConverter(Frame):
         self.writeLog( u'key', bankKey, u"with value", bankValue, u"added to config file" ) 
 
     def openFile(self):
-        filename = filedialog.askopenfilename(parent=self.parent,
+        if sys.version_info >= (3,0):
+            filename = filedialog.askopenfilename(parent=self.parent,
+                                                filetypes=[(u'Csv files',u'.csv'),
+                                                           (u'All Files',u'.*')],
+                                                title=u'Select the csv')
+        else:
+            filename = tkFileDialog.askopenfilename(parent=self.parent,
                                                 filetypes=[(u'Csv files',u'.csv'),
                                                            (u'All Files',u'.*')],
                                                 title=u'Select the csv')
