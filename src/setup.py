@@ -1,6 +1,6 @@
+import sys
 from cx_Freeze import setup, Executable
 
-import sys
 base = None
 icon = None
 if sys.platform == u'win32':
@@ -17,10 +17,11 @@ executables = [
                )
 ]
 
-buildOptions = dict(create_shared_zip=False)
+buildOptions = dict(create_shared_zip=False,packages=['distutils','configobj'])
 
 setup(name=u'OFXConverter',
       version = u'1.0',
       description = u'Convert csv to ofx file',
       options = dict(build_exe = buildOptions),
-      executables = executables)
+      executables = executables
+ )
