@@ -1,5 +1,4 @@
 import sys
-import tkinter.filedialog
 from config import Config
 from input.bank import Bank
 from output.ofx import Ofx
@@ -11,6 +10,7 @@ from PIL import ImageTk
 
 import tkinter.constants as constants
 import tkinter.ttk
+from tkinter import filedialog
 from tkinter import Label, Checkbutton, IntVar, StringVar, Scrollbar, Canvas, Message, Frame, Menu
 from tkinter import PhotoImage, Entry, Button, Tk, Text
 #import FixTk # needed for cx_freeze
