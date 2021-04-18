@@ -37,17 +37,17 @@ class BankStatement(object):
         
 if __name__ == u"__main__":
     b = BankStatement()
-    print b.dateTime
+    print(b.dateTime)
     b.failedStrings = u"test"
     b.failedStrings = u"test2"
-    print b.failedStrings
+    print(b.failedStrings)
     t = Transaction()
     t.amount = u"100.0"
     b.addTransaction( t )
-    print b.transactions
+    print(b.transactions)
     t = Transaction()
     t.amount = u"200.0"
     b.addTransaction( t )
-    print b.transactions
+    print(b.transactions)
     
     

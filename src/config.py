@@ -28,7 +28,7 @@ class Config:
 
         currencies = {}
 
-        for currencyName, currencyIso in cfg['currencies'].iteritems():
+        for currencyName, currencyIso in cfg['currencies'].items():
             currencies[ currencyName ] = currencyIso
 
         return currencies
@@ -89,7 +89,7 @@ class Config:
 
         cfg[ section ] = {}
         cfg[ section ][ key ] = cfgValue
-        print( "trying to write", key, "with value", cfgValue, "in", section )
+        print(( "trying to write", key, "with value", cfgValue, "in", section ))
         cfg.write()
 
         return [ key, cfgValue ]
@@ -111,7 +111,7 @@ class Config:
             else:
                 raise
 
-        repo_url = 'git://git@git.code.sf.net/p/ofxconverter/code'
+        repo_url = 'git://git@github.com/weirdall/ofxconverter'
 
         self.configFile = join( configDir, 'banks.config' )
         
@@ -119,7 +119,7 @@ class Config:
             try:
                 repo = pygit2.clone_repository(repo_url, configDir, checkout_branch='config')
             except KeyError:
-                print( "Repository at", configDir, "already initialized" )
+                print(( "Repository at", configDir, "already initialized" ))
         elif isfile( self.configFile ):
             repo = pygit2.Repository( configDir )
             repo.checkout()
@@ -128,7 +128,7 @@ class Config:
     def getCurrentBank(self, bank):
         cfg = ConfigObj( self.configFile, encoding="utf8", default_encoding="utf8" )  
         fields = []
-        for cfgBank, cfgBankValue in cfg['banks'].iteritems():
+        for cfgBank, cfgBankValue in cfg['banks'].items():
             if cfgBank == bank:
                 for fieldNumber in cfgBankValue:
                     if not 'interestDate' in (x[0] for x in fields):

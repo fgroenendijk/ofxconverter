@@ -38,11 +38,11 @@ class Bank(object):
         mainIban = []
         file = csv.reader( open(fileName) )
         for row in file:
-            line = u','.join( row )
-            match = re.search( ur'\w{2}\d{2}\w{4}\d{7}\w{0,16}', line.replace( u' ', u'' ) )
+            line = ','.join( row )
+            match = re.search( r'\w{2}\d{2}\w{4}\d{7}\w{0,16}', line.replace( ' ', '' ) )
             if match:
                 for column in row:
-                    search = re.search(ur'(\w{2}\d{2}\w{4}\d{7}\w{0,16})', column.replace(u' ',u'') )
+                    search = re.search(r'(\w{2}\d{2}\w{4}\d{7}\w{0,16})', column.replace(' ','') )
                     if search:
                         mainIban = self.checkIban( search.group(0), ibans )
                 if len( mainIban ) == 1:
@@ -50,26 +50,26 @@ class Bank(object):
                 
         return mainIban
 
-if __name__ == u'__main__':
+if __name__ == '__main__':
     b = Bank()
 
     import sys
-    print sys.path
+    print(sys.path)
 
-    mainIban = b.searchMainIban( u'test.csv' )
+    mainIban = b.searchMainIban( 'test.csv' )
 
     # If mainIban contains more than one iban,
     # let the user select which one is the main iban
     # Otherwise we know the bank this csv belongs to
 
     if len( mainIban ) > 1:
-        print u'there\'s too many ibans'
+        print('there\'s too many ibans')
     elif len( mainIban ) == 0:
-        print u'No ibans found'
+        print('No ibans found')
     else:
         ibanType = mainIban[0][:8]
 
     bankStatement = bankStatement.BankStatement()       
     
     
-    b.readFile( u'test.csv' )
+    b.readFile( 'test.csv' )
